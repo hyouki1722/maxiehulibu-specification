@@ -25,6 +25,8 @@
             --base-font-size: 16px;
             --menu-font-size: 14px;
             --title-font-size: 16px;
+            --primary-color: #3498db;
+            --hover-color: #e74c3c;
         }
 
         body {
@@ -82,7 +84,7 @@
             color: white;
             font-size: clamp(14px, 2vw, 16px);
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.3s, font-weight 0.2s;
             white-space: nowrap;
         }
 
@@ -91,7 +93,7 @@
         }
 
         .tab-btn.active {
-            background-color: #3498db;
+            background-color: var(--primary-color);
             font-weight: bold;
         }
 
@@ -101,6 +103,12 @@
             padding: 20px;
             display: none;
             background-color: #ecf0f1;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .content-area.active {
@@ -115,13 +123,11 @@
             background: #ffffff;
             box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
             overflow: hidden;
-            /* 讓內部的比例容器絕對置中 */
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* 點擊空白處重置用的隱形層 (放在最底層) */
         .canvas-bg-clickable {
             position: absolute;
             top: 0;
@@ -130,21 +136,18 @@
             height: 100%;
             z-index: 1;
             pointer-events: auto;
+            cursor: default;
         }
 
-        /* 核心修復：這是一個鎖死 16:9 的萬能容器 */
         .ratio-container {
             position: relative;
             aspect-ratio: 16 / 9;
-            /* 寬度盡量撐滿，高度不超過畫布，保持比例 */
             width: 100%;
             max-height: 100%;
             z-index: 2;
             pointer-events: none;
-            /* 讓點擊穿透到空白背景 */
         }
 
-        /* 如果螢幕超寬，則高度撐滿，寬度自動縮小以保持 16:9 */
         @media (min-aspect-ratio: 16/9) {
             .ratio-container {
                 width: auto;
@@ -159,9 +162,8 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
-            /* 因為容器已經是 16:9，圖片會完美貼合不會留白 */
             opacity: 0;
-            transition: opacity 0.3s ease-in-out;
+            transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             mix-blend-mode: multiply;
             filter: contrast(1.05);
             pointer-events: none;
@@ -180,125 +182,48 @@
             height: 100%;
             z-index: 5;
             pointer-events: none;
-            /* 避免遮擋背景點擊 */
+        }
+
+        /* 脈衝光暈動畫 - 引導使用者點擊 */
+        @keyframes pulseIndicator {
+            0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.5); }
+            70% { box-shadow: 0 0 0 12px rgba(52, 152, 219, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
         }
 
         .hotspot {
             position: absolute;
             cursor: pointer;
             border-radius: 40%;
-            /* border: 2px dashed rgba(255,0,0,0.5); /* 開發測試時可開啟此行 */
             z-index: 10;
             pointer-events: auto;
-            /* 啟用熱區專屬的點擊感應 */
+            transition: background-color 0.3s;
+            animation: pulseIndicator 2.5s infinite;
         }
 
-        /* ================= 熱區精準定位 ================= */
-
-        /* 人形圖 (16:9 比例) */
-        .hotspot-head {
-            top: 12%;
-            left: 42%;
-            width: 16%;
-            height: 23%;
+        .hotspot:hover, .hotspot.active {
+            animation: none;
+            background-color: rgba(52, 152, 219, 0.15); /* 輕微反饋 */
         }
 
-        .hotspot-chest {
-            top: 38%;
-            left: 43%;
-            width: 14%;
-            height: 18%;
-        }
+        /* 熱區座標 */
+        .hotspot-head { top: 12%; left: 42%; width: 16%; height: 23%; }
+        .hotspot-chest { top: 38%; left: 43%; width: 14%; height: 18%; }
+        .hotspot-abdomen { top: 56%; left: 43%; width: 14%; height: 16%; }
+        .hotspot-body { top: 75%; left: 43%; width: 14%; height: 20%; }
 
-        .hotspot-abdomen {
-            top: 56%;
-            left: 43%;
-            width: 14%;
-            height: 16%;
-        }
+        .hotspot-opd { top: 40%; left: 7%; width: 22%; height: 35%; border-radius: 10px; }
+        .hotspot-er { top: 70%; left: 36%; width: 20%; height: 20%; border-radius: 10px; }
+        .hotspot-or { top: 15%; left: 48%; width: 22%; height: 25%; border-radius: 10px; }
+        .hotspot-pharmacy { top: 70%; left: 27%; width: 8%; height: 8%; border-radius: 10px; }
+        .hotspot-physio { top: 48%; left: 48%; width: 22%; height: 22%; border-radius: 10px; }
+        .hotspot-hospice { top: 15%; left: 8%; width: 22%; height: 20%; border-radius: 10px; }
+        .hotspot-cancer { top: 15%; left: 31%; width: 15%; height: 18%; border-radius: 10px; }
 
-        .hotspot-body {
-            top: 75%;
-            left: 43%;
-            width: 14%;
-            height: 20%;
-        }
+        .hotspot-admin { top: 45%; left: 30%; width: 18%; height: 25%; border-radius: 10px; }
+        .hotspot-env { top: 45%; left: 52%; width: 18%; height: 25%; border-radius: 10px; }
 
-        /* 醫院圖 (16:9 比例) */
-        .hotspot-opd {
-            top: 40%;
-            left: 7%;
-            width: 22%;
-            height: 35%;
-            border-radius: 10px;
-        }
-
-        .hotspot-er {
-            top: 70%;
-            left: 36%;
-            width: 20%;
-            height: 20%;
-            border-radius: 10px;
-        }
-
-        .hotspot-or {
-            top: 15%;
-            left: 48%;
-            width: 22%;
-            height: 25%;
-            border-radius: 10px;
-        }
-
-        .hotspot-pharmacy {
-            top: 70%;
-            left: 27%;
-            width: 8%;
-            height: 8%;
-            border-radius: 10px;
-        }
-
-        .hotspot-physio {
-            top: 48%;
-            left: 48%;
-            width: 22%;
-            height: 22%;
-            border-radius: 10px;
-        }
-
-        .hotspot-hospice {
-            top: 15%;
-            left: 8%;
-            width: 22%;
-            height: 20%;
-            border-radius: 10px;
-        }
-
-        .hotspot-cancer {
-            top: 15%;
-            left: 31%;
-            width: 15%;
-            height: 18%;
-            border-radius: 10px;
-        }
-
-        /* 行政庶務圖 (16:9 比例) */
-        .hotspot-admin {
-            top: 45%;
-            left: 30%;
-            width: 18%;
-            height: 25%;
-            border-radius: 10px;
-        }
-
-        .hotspot-env {
-            top: 45%;
-            left: 52%;
-            width: 18%;
-            height: 25%;
-            border-radius: 10px;
-        }
-
-        /* ================= 彈出選單設定 ================= */
+        /* 彈出選單設定 */
         .protocols-container {
             position: absolute;
             top: 0;
@@ -311,31 +236,32 @@
 
         .protocol-btn {
             position: absolute;
-            background-color: rgba(255, 255, 255, 0.96);
-            border: 2px solid #3498db;
+            background-color: rgba(255, 255, 255, 0.98);
+            border: 2px solid var(--primary-color);
             border-radius: 10px;
             padding: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
             display: flex;
             flex-direction: column;
             gap: 8px;
             min-width: 220px;
             opacity: 0;
-            transform: scale(0.95);
+            transform: scale(0.92) translateY(5px);
             pointer-events: none;
-            transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            backdrop-filter: blur(4px);
         }
 
         .protocol-btn.show,
         .protocol-btn.locked {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1) translateY(0);
             pointer-events: auto;
         }
 
         .protocol-btn:hover {
             box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
-            border-color: #e74c3c;
+            border-color: var(--hover-color);
             z-index: 25;
         }
 
@@ -345,35 +271,17 @@
             position: absolute;
             width: 12px;
             height: 12px;
-            background-color: #e74c3c;
+            background-color: var(--hover-color);
             border-radius: 50%;
-            box-shadow: 0 0 8px #e74c3c;
+            box-shadow: 0 0 8px var(--hover-color);
             z-index: -1;
+            transition: background-color 0.3s;
         }
 
-        .pos-head::before {
-            top: 50%;
-            left: -20px;
-            transform: translateY(-50%);
-        }
-
-        .pos-chest::before {
-            top: 50%;
-            right: -20px;
-            transform: translateY(-50%);
-        }
-
-        .pos-abdomen::before {
-            top: 50%;
-            left: -20px;
-            transform: translateY(-50%);
-        }
-
-        .pos-body::before {
-            top: 50%;
-            right: -20px;
-            transform: translateY(-50%);
-        }
+        .pos-head::before { top: 50%; left: -20px; transform: translateY(-50%); }
+        .pos-chest::before { top: 50%; right: -20px; transform: translateY(-50%); }
+        .pos-abdomen::before { top: 50%; left: -20px; transform: translateY(-50%); }
+        .pos-body::before { top: 50%; right: -20px; transform: translateY(-50%); }
 
         .protocol-title {
             font-size: var(--title-font-size);
@@ -391,12 +299,12 @@
             font-size: var(--menu-font-size);
             color: #555;
             display: block;
-            padding: 8px 10px;
+            padding: 10px 12px;
             background: #f8f9fa;
-            border-radius: 5px;
+            border-radius: 6px;
             text-decoration: none;
             cursor: pointer;
-            transition: background 0.2s, color 0.2s;
+            transition: all 0.2s;
             border-left: 3px solid transparent;
         }
 
@@ -405,104 +313,35 @@
             background: #ffeaa7;
             color: #d35400;
             border-left: 3px solid #d35400;
+            transform: translateX(3px);
         }
 
-        /* --- 電腦版選單位置 --- */
-        .pos-head {
-            top: 15%;
-            left: calc(50% + 140px);
-        }
+        /* 電腦版選單位置 */
+        .pos-head { top: 15%; left: calc(50% + 140px); }
+        .pos-chest { top: 35%; right: calc(50% + 140px); left: auto; }
+        .pos-abdomen { top: 55%; left: calc(50% + 140px); }
+        .pos-body { top: 40%; right: calc(50% + 140px); left: auto; }
+        
+        .pos-opd { top: 40%; left: 30%; }
+        .pos-er { top: 60%; left: 57%; }
+        .pos-or { top: 15%; left: 72%; }
+        .pos-pharmacy { top: 70%; left: 10%; }
+        .pos-physio { top: 65%; left: 72%; }
+        .pos-hospice { top: 20%; left: 31%; }
+        .pos-cancer { top: 15%; left: 48%; }
 
-        .pos-chest {
-            top: 35%;
-            right: calc(50% + 140px);
-            left: auto;
-        }
+        .hosp-btn { border-color: #e67e22; }
+        .hosp-title { color: #d35400; }
+        .hosp-btn::before { display: none; }
 
-        .pos-abdomen {
-            top: 55%;
-            left: calc(50% + 140px);
-        }
+        .pos-admin { top: 30%; left: 48%; width: 250px; }
+        .pos-env { top: 30%; left: 25%; width: 250px; }
 
-        /* 核心修復：將全身性選單往上移，避免超出底部界線 */
-        .pos-body {
-            top: 40%;
-            right: calc(50% + 140px);
-            left: auto;
-        }
+        .desk-btn { border-color: #27ae60; }
+        .desk-title { color: #1e8449; }
+        .desk-btn::before { display: none; }
 
-        .pos-opd {
-            top: 40%;
-            left: 30%;
-        }
-
-        .pos-er {
-            top: 60%;
-            left: 57%;
-        }
-
-        .pos-or {
-            top: 15%;
-            left: 72%;
-        }
-
-        .pos-pharmacy {
-            top: 70%;
-            left: 10%;
-        }
-
-        .pos-physio {
-            top: 65%;
-            left: 72%;
-        }
-
-        .pos-hospice {
-            top: 20%;
-            left: 31%;
-        }
-
-        .pos-cancer {
-            top: 15%;
-            left: 48%;
-        }
-
-        .hosp-btn {
-            border-color: #e67e22;
-        }
-
-        .hosp-title {
-            color: #d35400;
-        }
-
-        .hosp-btn::before {
-            display: none;
-        }
-
-        .pos-admin {
-            top: 30%;
-            left: 48%;
-            width: 250px;
-        }
-
-        .pos-env {
-            top: 30%;
-            left: 25%;
-            width: 250px;
-        }
-
-        .desk-btn {
-            border-color: #27ae60;
-        }
-
-        .desk-title {
-            color: #1e8449;
-        }
-
-        .desk-btn::before {
-            display: none;
-        }
-
-        /* ================= 手機/平板版 RWD ================= */
+        /* 手機/平板版 RWD */
         @media (max-width: 768px) {
             body {
                 padding: 0;
@@ -516,17 +355,10 @@
                 height: 100dvh;
                 display: flex;
                 flex-direction: column;
-                overflow: hidden;
             }
 
-            .header,
-            .tabs {
-                flex-shrink: 0;
-            }
-
-            .header {
-                padding: 15px 10px;
-            }
+            .header, .tabs { flex-shrink: 0; }
+            .header { padding: 15px 10px; }
 
             .content-area {
                 height: 0;
@@ -536,6 +368,7 @@
                 padding: 0;
                 background-color: #f4f6f9;
                 overflow-y: auto;
+                scroll-behavior: smooth; /* 啟用平滑捲動 */
             }
 
             .content-area:not(.active) {
@@ -549,12 +382,10 @@
                 flex-direction: column;
                 height: auto;
                 min-height: 100%;
-                overflow: visible;
                 background-color: white;
                 justify-content: flex-start;
             }
 
-            /* 手機版圖片區塊 Sticky：由於是橫圖，我們讓它的寬度自然撐滿 */
             .ratio-container {
                 position: sticky;
                 top: 0;
@@ -565,13 +396,15 @@
                 z-index: 10;
                 border-bottom: 1px solid #ddd;
                 flex-shrink: 0;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.05);
             }
 
+            /* 修復手機版重置：保留觸控區域，覆蓋在圖片上方但層級低於熱區 */
             .canvas-bg-clickable {
-                display: none;
+                display: block;
+                z-index: 4; 
             }
 
-            /* 下方選單列表 */
             .protocols-container {
                 position: relative;
                 display: flex;
@@ -591,18 +424,22 @@
                 right: auto !important;
                 opacity: 1 !important;
                 transform: none !important;
-                margin-bottom: 10px;
+                margin-bottom: 15px;
                 border-radius: 8px;
                 border-width: 1px;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             }
 
-            .protocol-btn::before {
-                display: none;
-            }
+            .protocol-btn::before { display: none; }
 
             .protocol-btn.locked {
                 display: flex !important;
+                animation: slideUp 0.3s ease-out forwards;
+            }
+
+            @keyframes slideUp {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
             }
 
             .protocol-title {
@@ -612,17 +449,12 @@
 
             .protocol-item {
                 border: 1px solid #eee;
-                border-left: 4px solid #3498db;
-                margin-bottom: 6px;
+                border-left: 4px solid var(--primary-color);
+                margin-bottom: 8px;
             }
 
-            .hosp-btn .protocol-item {
-                border-left-color: #e67e22;
-            }
-
-            .desk-btn .protocol-item {
-                border-left-color: #27ae60;
-            }
+            .hosp-btn .protocol-item { border-left-color: #e67e22; }
+            .desk-btn .protocol-item { border-left-color: #27ae60; }
         }
     </style>
 </head>
@@ -640,67 +472,41 @@
             <button class="tab-btn" onclick="switchTab('tab3', this)">🖥️ 行政庶務圖</button>
         </div>
 
-        <!-- ================= 頁籤一：人形圖 ================= -->
-        <!-- 圖片 / 熱區 / 選單內容已改為由 TAB_DATA 資料表於 renderTab() 動態產生，
-             不再手動維護重複的 HTML；如需新增/修改規範，只需編輯下方 <script> 內的 TAB1_DATA -->
+        <!-- 頁籤一：人形圖 -->
         <div id="tab1" class="content-area active">
             <div class="visual-canvas" id="canvas-tab1">
-                <div class="canvas-bg-clickable" onclick="resetCanvas('tab1')"></div>
-
-                <!-- 統一使用 16:9 的比例容器 -->
                 <div class="ratio-container" id="ratio-tab1">
-                    <!-- 底圖與所有亮起圖：由 renderTab() 動態插入 -->
-                    <div class="hotspots-overlay" id="hotspots-tab1">
-                        <!-- 熱區：由 renderTab() 動態插入 -->
-                    </div>
+                    <div class="canvas-bg-clickable" onclick="resetCanvas('tab1')"></div>
+                    <div class="hotspots-overlay" id="hotspots-tab1"></div>
                 </div>
-
-                <div class="protocols-container" id="menus-tab1">
-                    <!-- 選單：由 renderTab() 動態插入 -->
-                </div>
+                <div class="protocols-container" id="menus-tab1"></div>
             </div>
         </div>
 
-        <!-- ================= 頁籤二：醫院圖 ================= -->
-        <!-- 內容由 TAB2_DATA 資料表動態產生，見下方的 JS 區塊 -->
+        <!-- 頁籤二：醫院圖 -->
         <div id="tab2" class="content-area">
             <div class="visual-canvas" id="canvas-tab2">
-                <div class="canvas-bg-clickable" onclick="resetCanvas('tab2')"></div>
                 <div class="ratio-container" id="ratio-tab2">
+                    <div class="canvas-bg-clickable" onclick="resetCanvas('tab2')"></div>
                     <div class="hotspots-overlay" id="hotspots-tab2"></div>
                 </div>
-
                 <div class="protocols-container" id="menus-tab2"></div>
             </div>
         </div>
 
-        <!-- ================= 頁籤三：行政庶務圖 ================= -->
-        <!-- 內容由 TAB3_DATA 資料表動態產生，見下方的 JS 區塊 -->
+        <!-- 頁籤三：行政庶務圖 -->
         <div id="tab3" class="content-area">
             <div class="visual-canvas" id="canvas-tab3">
-                <div class="canvas-bg-clickable" onclick="resetCanvas('tab3')"></div>
                 <div class="ratio-container" id="ratio-tab3">
+                    <div class="canvas-bg-clickable" onclick="resetCanvas('tab3')"></div>
                     <div class="hotspots-overlay" id="hotspots-tab3"></div>
                 </div>
-
                 <div class="protocols-container" id="menus-tab3"></div>
             </div>
         </div>
     </div>
 
     <script>
-        /* ============================================================
-           資料驅動設定 (Data-Driven Config)
-           ------------------------------------------------------------
-           新增 / 修改 / 刪除規範連結，只需要編輯下方 TAB1_DATA / TAB2_DATA /
-           TAB3_DATA 三個物件即可，不需要再手動同步 HTML 中的圖片、熱區、選單。
-           每個 region 會依 id 自動對應既有 CSS 類別：
-             .hotspot-{regionId}  (熱區座標，定義在 <style> 區)
-             .pos-{regionId}      (選單彈出位置，定義在 <style> 區)
-           若新增全新的 region，記得在 <style> 補上對應的
-           .hotspot-xxx / .pos-xxx 座標即可。
-           ============================================================ */
-
         const TAB1_DATA = {
             id: 'tab1',
             baseImage: { id: 'base-human', src: './body.png', alt: '人體正面示意圖' },
@@ -716,35 +522,10 @@
                 { id: 'img-wound', src: './wound_care.png', alt: '傷口照護示意圖' }
             ],
             regions: [
-                {
-                    id: 'head', image: 'img-nervous', title: '🧠 頭部 (神經系統)', badge: null,
-                    items: [
-                        { no: '015', name: '神經感覺系統', url: 'https://drive.google.com/drive/folders/12VOsJeTQ-9hwwenurnduTRP0vrgo_xx7?usp=drive_link' }
-                    ]
-                },
-                {
-                    id: 'chest', image: 'img-circulatory', title: '🫁 胸部 (心肺系統)', badge: null,
-                    items: [
-                        { no: '013', name: '心臟血管系統護理', url: 'https://drive.google.com/drive/folders/1E37ZeXwyxT4jpMZoeNtkM1Fh1fgbKSwz?usp=drive_link', hoverImage: 'img-circulatory' },
-                        { no: '014', name: '呼吸系統', url: 'https://drive.google.com/drive/folders/1JJtMeUILg1M1nRFslp1-cR5Dv0qutPmY?usp=drive_link', hoverImage: 'img-respiratory' }
-                    ]
-                },
-                {
-                    id: 'abdomen', image: 'img-digestive', title: '🩺 腹部 (消化與泌尿)', badge: null,
-                    items: [
-                        { no: '012', name: '消化道系統護理', url: 'https://drive.google.com/drive/folders/1NfBIMXB8LZme0O1S5afTLTAZEEm5T7h7?usp=drive_link', hoverImage: 'img-digestive' },
-                        { no: '016', name: '腎臟泌尿系統', url: 'https://drive.google.com/drive/folders/1VIhzRwqwzf36dcTHrkgJAo6LJIuUDhke?usp=drive_link', hoverImage: 'img-urinary' }
-                    ]
-                },
-                {
-                    id: 'body', image: 'img-vital', title: '🩸 全身性 (體徵與皮膚)', badge: null,
-                    items: [
-                        { no: '001', name: '生命徵象.疼痛.情緒困擾', url: 'https://drive.google.com/drive/folders/1omd_6gZsQcPwunujpwxd84qgLnrx8e92?usp=drive_link', hoverImage: 'img-vital' },
-                        { no: '002', name: '體液供給', url: 'https://drive.google.com/drive/folders/1vSrsuosLLVV4ocY4h2b1eDl8C6BwYxB7?usp=drive_link', hoverImage: 'img-fluid' },
-                        { no: '011', name: '舒適需要', url: 'https://drive.google.com/drive/folders/1ODrOuVaCIt0mE9BH7CGAmJtQ0pQFqk9T?usp=drive_link', hoverImage: 'img-comfort' },
-                        { no: '020', name: '傷口照護', url: 'https://drive.google.com/drive/folders/1FQqTWZunZp0pbhMKfx-yrLtiZ0W5PZnR?usp=drive_link', hoverImage: 'img-wound' }
-                    ]
-                }
+                { id: 'head', image: 'img-nervous', title: '🧠 頭部 (神經系統)', badge: null, items: [{ no: '015', name: '神經感覺系統', url: 'https://drive.google.com/drive/folders/12VOsJeTQ-9hwwenurnduTRP0vrgo_xx7?usp=drive_link' }] },
+                { id: 'chest', image: 'img-circulatory', title: '🫁 胸部 (心肺系統)', badge: null, items: [{ no: '013', name: '心臟血管系統護理', url: 'https://drive.google.com/drive/folders/1E37ZeXwyxT4jpMZoeNtkM1Fh1fgbKSwz?usp=drive_link', hoverImage: 'img-circulatory' }, { no: '014', name: '呼吸系統', url: 'https://drive.google.com/drive/folders/1JJtMeUILg1M1nRFslp1-cR5Dv0qutPmY?usp=drive_link', hoverImage: 'img-respiratory' }] },
+                { id: 'abdomen', image: 'img-digestive', title: '🩺 腹部 (消化與泌尿)', badge: null, items: [{ no: '012', name: '消化道系統護理', url: 'https://drive.google.com/drive/folders/1NfBIMXB8LZme0O1S5afTLTAZEEm5T7h7?usp=drive_link', hoverImage: 'img-digestive' }, { no: '016', name: '腎臟泌尿系統', url: 'https://drive.google.com/drive/folders/1VIhzRwqwzf36dcTHrkgJAo6LJIuUDhke?usp=drive_link', hoverImage: 'img-urinary' }] },
+                { id: 'body', image: 'img-vital', title: '🩸 全身性 (體徵與皮膚)', badge: null, items: [{ no: '001', name: '生命徵象.疼痛.情緒困擾', url: 'https://drive.google.com/drive/folders/1omd_6gZsQcPwunujpwxd84qgLnrx8e92?usp=drive_link', hoverImage: 'img-vital' }, { no: '002', name: '體液供給', url: 'https://drive.google.com/drive/folders/1vSrsuosLLVV4ocY4h2b1eDl8C6BwYxB7?usp=drive_link', hoverImage: 'img-fluid' }, { no: '011', name: '舒適需要', url: 'https://drive.google.com/drive/folders/1ODrOuVaCIt0mE9BH7CGAmJtQ0pQFqk9T?usp=drive_link', hoverImage: 'img-comfort' }, { no: '020', name: '傷口照護', url: 'https://drive.google.com/drive/folders/1FQqTWZunZp0pbhMKfx-yrLtiZ0W5PZnR?usp=drive_link', hoverImage: 'img-wound' }] }
             ]
         };
 
@@ -761,34 +542,13 @@
                 { id: 'img-hospice', src: './Hospice_care.png', alt: '安寧療護示意圖' }
             ],
             regions: [
-                {
-                    id: 'opd', image: 'img-opd', title: '🟦 門診區域 (OPD)', badge: 'hosp',
-                    items: [{ no: '003', name: '醫囑.會診', url: 'https://drive.google.com/drive/folders/1YxIvPCKZmObEV49wHzL1Ig_CMtxIUEkt?usp=drive_link' }]
-                },
-                {
-                    id: 'er', image: 'img-er', title: '🟧 急診區域 (ER)', badge: 'hosp',
-                    items: [{ no: '006', name: '緊急救護', url: 'https://drive.google.com/drive/folders/1VM4nAxDPZ6TukzIlfTTFqtcBzwoczTDz?usp=drive_link' }]
-                },
-                {
-                    id: 'or', image: 'img-or', title: '🟥 手術區域 (OR)', badge: 'hosp',
-                    items: [{ no: '004', name: '手術護理', url: 'https://drive.google.com/drive/folders/1dRixMwUWKFF8ra9BO0UMXQF4ctlwPu5P?usp=drive_link' }]
-                },
-                {
-                    id: 'pharmacy', image: 'img-pharmacy', title: '🟩 藥物安全 (藥局)', badge: 'hosp',
-                    items: [{ no: '010', name: '藥物安全', url: 'https://drive.google.com/drive/folders/1JEUwKq4fzA9j4O-WjchVhgdWmDpIZ5k4?usp=drive_link' }]
-                },
-                {
-                    id: 'physio', image: 'img-physio', title: '🟪 放射/生理/檢驗/核醫', badge: 'hosp',
-                    items: [{ no: '019', name: '放射、生理、檢驗、核醫', url: 'https://drive.google.com/drive/folders/1vGjMz_JR3A7bEJkKX4u8QKQ-xA6hwRii?usp=drive_link' }]
-                },
-                {
-                    id: 'hospice', image: 'img-hospice', title: '🌸 安寧療護', badge: 'hosp',
-                    items: [{ no: '018', name: '安寧療護及臨終護理', url: 'https://drive.google.com/drive/folders/1cp0v1T-RggkdamHnsSw658JSivPHyZsm?usp=drive_link' }]
-                },
-                {
-                    id: 'cancer', image: 'img-cancer', title: '🟨 癌症照護', badge: 'hosp',
-                    items: [{ no: '017', name: '癌症照護', url: 'https://drive.google.com/drive/folders/1Wj3exP9S_cUY1dGlbkhSyB5qXhOq2ZRH?usp=drive_link' }]
-                }
+                { id: 'opd', image: 'img-opd', title: '🟦 門診區域 (OPD)', badge: 'hosp', items: [{ no: '003', name: '醫囑.會診', url: 'https://drive.google.com/drive/folders/1YxIvPCKZmObEV49wHzL1Ig_CMtxIUEkt?usp=drive_link' }] },
+                { id: 'er', image: 'img-er', title: '🟧 急診區域 (ER)', badge: 'hosp', items: [{ no: '006', name: '緊急救護', url: 'https://drive.google.com/drive/folders/1VM4nAxDPZ6TukzIlfTTFqtcBzwoczTDz?usp=drive_link' }] },
+                { id: 'or', image: 'img-or', title: '🟥 手術區域 (OR)', badge: 'hosp', items: [{ no: '004', name: '手術護理', url: 'https://drive.google.com/drive/folders/1dRixMwUWKFF8ra9BO0UMXQF4ctlwPu5P?usp=drive_link' }] },
+                { id: 'pharmacy', image: 'img-pharmacy', title: '🟩 藥物安全 (藥局)', badge: 'hosp', items: [{ no: '010', name: '藥物安全', url: 'https://drive.google.com/drive/folders/1JEUwKq4fzA9j4O-WjchVhgdWmDpIZ5k4?usp=drive_link' }] },
+                { id: 'physio', image: 'img-physio', title: '🟪 放射/生理/檢驗/核醫', badge: 'hosp', items: [{ no: '019', name: '放射、生理、檢驗、核醫', url: 'https://drive.google.com/drive/folders/1vGjMz_JR3A7bEJkKX4u8QKQ-xA6hwRii?usp=drive_link' }] },
+                { id: 'hospice', image: 'img-hospice', title: '🌸 安寧療護', badge: 'hosp', items: [{ no: '018', name: '安寧療護及臨終護理', url: 'https://drive.google.com/drive/folders/1cp0v1T-RggkdamHnsSw658JSivPHyZsm?usp=drive_link' }] },
+                { id: 'cancer', image: 'img-cancer', title: '🟨 癌症照護', badge: 'hosp', items: [{ no: '017', name: '癌症照護', url: 'https://drive.google.com/drive/folders/1Wj3exP9S_cUY1dGlbkhSyB5qXhOq2ZRH?usp=drive_link' }] }
             ]
         };
 
@@ -800,28 +560,11 @@
                 { id: 'img-env', src: './Environment_Infection_Control.png', alt: '環境感染控制示意圖' }
             ],
             regions: [
-                {
-                    id: 'admin', image: 'img-admin', title: '📋 護理行政與交班', badge: 'desk',
-                    items: [
-                        { no: '005', name: '出入院管理', url: 'https://drive.google.com/drive/folders/1McWp-B02Lmik20HePdzV_CBaKSFVFMBO?usp=drive_link' },
-                        { no: '021', name: '護理交班及其他庶務', url: 'https://drive.google.com/drive/folders/1AhJtnIKIGepHrB7NvqTdgOyxgtj1deas?usp=drive_link' }
-                    ]
-                },
-                {
-                    id: 'env', image: 'img-env', title: '🛡️ 環境與感染控制', badge: 'desk',
-                    items: [
-                        { no: '007', name: '權益維護', url: 'https://drive.google.com/drive/folders/1BZI7cb09tgDLejy4EHjfnsvH8CKm2qF5?usp=drive_link' },
-                        { no: '008', name: '醫療環境', url: 'https://drive.google.com/drive/folders/1IpkVTM-uRCQLxoX4P_nl07W9dttU1F6Y?usp=drive_link' },
-                        { no: '009', name: '感染管制委員會', url: 'https://drive.google.com/drive/folders/1ULWwyTdcmb0rW9Nvy-LqC1XcX-_WNcmc?usp=drive_link' }
-                    ]
-                }
+                { id: 'admin', image: 'img-admin', title: '📋 護理行政與交班', badge: 'desk', items: [{ no: '005', name: '出入院管理', url: 'https://drive.google.com/drive/folders/1McWp-B02Lmik20HePdzV_CBaKSFVFMBO?usp=drive_link' }, { no: '021', name: '護理交班及其他庶務', url: 'https://drive.google.com/drive/folders/1AhJtnIKIGepHrB7NvqTdgOyxgtj1deas?usp=drive_link' }] },
+                { id: 'env', image: 'img-env', title: '🛡️ 環境與感染控制', badge: 'desk', items: [{ no: '007', name: '權益維護', url: 'https://drive.google.com/drive/folders/1BZI7cb09tgDLejy4EHjfnsvH8CKm2qF5?usp=drive_link' }, { no: '008', name: '醫療環境', url: 'https://drive.google.com/drive/folders/1IpkVTM-uRCQLxoX4P_nl07W9dttU1F6Y?usp=drive_link' }, { no: '009', name: '感染管制委員會', url: 'https://drive.google.com/drive/folders/1ULWwyTdcmb0rW9Nvy-LqC1XcX-_WNcmc?usp=drive_link' }] }
             ]
         };
 
-        /* ============================================================
-           圖片載入失敗 fallback：改用內嵌 SVG 佔位圖取代 <img>，
-           讓既有的淡入淡出 / mix-blend-mode 效果不需額外處理即可沿用。
-           ============================================================ */
         const IMG_FALLBACK_SRC = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
             '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">' +
             '<rect width="800" height="450" fill="#f1f3f5"/>' +
@@ -831,24 +574,26 @@
         );
 
         function handleImageError(imgEl) {
-            if (imgEl.dataset.fallbackApplied) return; // 避免 SVG 佔位圖也觸發 onerror 造成無窮迴圈
+            if (imgEl.dataset.fallbackApplied) return;
             imgEl.dataset.fallbackApplied = 'true';
-            console.warn('[圖片載入失敗]', imgEl.id, imgEl.getAttribute('data-original-src') || imgEl.src);
             imgEl.src = IMG_FALLBACK_SRC;
         }
 
-        /* ============================================================
-           依 TAB_DATA 動態產生 圖片 / 熱區 / 選單
-           - 圖片統一加上 loading="lazy"：未啟用的頁籤（display:none）
-             瀏覽器會延後下載其圖片，改善初次載入效能。
-           - 圖片統一加上 onerror fallback，避免破圖。
-           ============================================================ */
+        /* 預載圖片機制：解決首次 Hover 時破圖或白閃的問題 */
+        function preloadImages(datasets) {
+            datasets.forEach(data => {
+                [data.baseImage, ...data.images].forEach(imgObj => {
+                    const img = new Image();
+                    img.src = imgObj.src;
+                });
+            });
+        }
+
         function renderTab(data) {
             const ratioContainer = document.getElementById(`ratio-${data.id}`);
             const hotspotsContainer = document.getElementById(`hotspots-${data.id}`);
             const menusContainer = document.getElementById(`menus-${data.id}`);
 
-            // 1. 圖片（底圖 + 各系統/區域圖），插入在 hotspots-overlay 之前
             const allImages = [data.baseImage, ...data.images];
             const imagesHtml = allImages.map((img, idx) => `
                 <img id="${img.id}" src="${img.src}" data-original-src="${img.src}"
@@ -858,15 +603,13 @@
             `).join('');
             hotspotsContainer.insertAdjacentHTML('beforebegin', imagesHtml);
 
-            // 2. 熱區
             hotspotsContainer.innerHTML = data.regions.map(region => `
-                <div class="hotspot hotspot-${region.id}"
+                <div id="hotspot-${data.id}-${region.id}" class="hotspot hotspot-${region.id}"
                      onmouseenter="hoverRegion('${data.id}', '${region.id}', '${region.image}')"
                      onmouseleave="leaveHoverRegion('${data.id}')"
                      onclick="lockRegion('${data.id}', '${region.id}', '${region.image}')"></div>
             `).join('');
 
-            // 3. 選單
             menusContainer.innerHTML = data.regions.map(region => {
                 const badgeBtnClass = region.badge ? `${region.badge}-btn` : '';
                 const badgeTitleClass = region.badge ? `${region.badge}-title` : '';
@@ -876,6 +619,7 @@
                         : '';
                     return `<a class="protocol-item ext-link" ${hoverAttrs} href="${item.url}" target="_blank">${item.no} ${item.name}</a>`;
                 }).join('');
+                
                 return `
                 <div id="menu-${data.id}-${region.id}" class="protocol-btn ${badgeBtnClass} pos-${region.id}"
                      onmouseenter="enterMenu('${data.id}')" onmouseleave="leaveMenu('${data.id}')">
@@ -906,7 +650,6 @@
             if (state[tabId].isLocked || isMobile()) return;
             clearTimeout(hoverTimer);
             hideAllMenus(tabId);
-
             state[tabId].hoveredImageId = imageId;
 
             document.querySelectorAll(`#${tabId} .base-image`).forEach(img => img.classList.remove('active-img'));
@@ -945,9 +688,12 @@
                 return;
             }
 
+            // 清除其他熱區的選取狀態
+            document.querySelectorAll(`#${tabId} .hotspot`).forEach(h => h.classList.remove('active'));
+            document.getElementById(`hotspot-${tabId}-${regionId}`)?.classList.add('active');
+
             document.querySelectorAll(`#${tabId} .protocol-btn`).forEach(menu => {
-                menu.classList.remove('show');
-                menu.classList.remove('locked');
+                menu.classList.remove('show', 'locked');
             });
 
             state[tabId].isLocked = true;
@@ -958,7 +704,16 @@
             if (imageId) document.getElementById(imageId)?.classList.add('active-img');
 
             const menu = document.getElementById(`menu-${tabId}-${regionId}`);
-            if (menu) menu.classList.add('locked');
+            if (menu) {
+                menu.classList.add('locked');
+                
+                // 優化：手機版點擊後平滑滾動至選單，確保使用者看得到
+                if (isMobile()) {
+                    setTimeout(() => {
+                        menu.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                }
+            }
         }
 
         function resetCanvas(tabId) {
@@ -966,7 +721,10 @@
             state[tabId].lockedRegion = null;
             state[tabId].lockedImageId = null;
             state[tabId].hoveredImageId = null;
+            
+            document.querySelectorAll(`#${tabId} .hotspot`).forEach(h => h.classList.remove('active'));
             hideAllMenus(tabId);
+            
             document.querySelectorAll(`#${tabId} .protocol-btn`).forEach(menu => menu.classList.remove('locked'));
             document.getElementById(state[tabId].baseImageId)?.classList.add('active-img');
         }
@@ -982,11 +740,7 @@
             document.querySelectorAll(`#${tabId} .base-image`).forEach(img => img.classList.remove('active-img'));
 
             if (state[tabId].isLocked) {
-                if (state[tabId].lockedImageId) {
-                    document.getElementById(state[tabId].lockedImageId)?.classList.add('active-img');
-                } else {
-                    document.getElementById(state[tabId].baseImageId)?.classList.add('active-img');
-                }
+                document.getElementById(state[tabId].lockedImageId || state[tabId].baseImageId)?.classList.add('active-img');
             } else if (state[tabId].hoveredImageId) {
                 document.getElementById(state[tabId].hoveredImageId)?.classList.add('active-img');
             } else {
@@ -996,22 +750,17 @@
 
         function hideAllMenus(tabId) {
             document.querySelectorAll(`#${tabId} .base-image`).forEach(img => img.classList.remove('active-img'));
-            document.querySelectorAll(`#${tabId} .protocol-btn`).forEach(menu => {
-                if (!menu.classList.contains('locked')) {
-                    menu.classList.remove('show');
-                }
-            });
+            document.querySelectorAll(`#${tabId} .protocol-btn:not(.locked)`).forEach(menu => menu.classList.remove('show'));
         }
 
         document.addEventListener("DOMContentLoaded", function () {
-            // 依資料表產生三個頁籤的圖片 / 熱區 / 選單
+            // 背景非同步預先載入所有圖片
+            setTimeout(() => preloadImages([TAB1_DATA, TAB2_DATA, TAB3_DATA]), 100);
+
             renderTab(TAB1_DATA);
             renderTab(TAB2_DATA);
             renderTab(TAB3_DATA);
 
-            // 外部連結改用事件代理 (event delegation)：
-            // 因為 a.ext-link 現在是由 renderTab() 動態產生，
-            // DOMContentLoaded 當下尚未存在，改用 document 層級監聽即可涵蓋所有動態內容。
             document.addEventListener('click', function (e) {
                 const link = e.target.closest('a.ext-link');
                 if (!link) return;
@@ -1019,12 +768,10 @@
                 if (!url.includes('openExternalBrowser=1') && url !== '#' && !url.startsWith('javascript')) {
                     e.preventDefault();
                     const separator = url.includes('?') ? '&' : '?';
-                    const newUrl = url + separator + 'openExternalBrowser=1';
-                    window.open(newUrl, '_blank');
+                    window.open(url + separator + 'openExternalBrowser=1', '_blank');
                 }
             });
         });
     </script>
 </body>
-
 </html>
