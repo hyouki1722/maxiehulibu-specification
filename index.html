@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>護理作業規範互動導覽系統 (圖形融合版)</title>
     <link rel="icon" href="護理作業標準規範互動導覽系統.ico" type="image/x-icon">
 
@@ -257,7 +257,7 @@
             flex-direction: column;
             gap: 8px;
             min-width: 260px; /* 加寬以容納放大的文字 */
-            max-width: 320px; /* 加寬以容納放大的文字 */
+            max-width: 320px; /* 限制最大寬度以免佔用過多畫面 */
             opacity: 0;
             transform: scale(0.92) translateY(5px);
             pointer-events: none;
@@ -356,8 +356,8 @@
         }
         .info-time {
             font-size: 15px; /* 放大時間 */
-            color: #e67e22;
-            font-weight: 500;
+            color: #d35400; /* 高對比的深橘紅色 */
+            font-weight: 600; /* 加粗增強辨識度 */
         }
         .info-note {
             font-size: 14px; /* 放大備註 */
@@ -400,12 +400,12 @@
         .desk-title { color: #1e8449; }
         .desk-btn::before { display: none; }
 
-         /* 電腦版選單位置 - Tab 4 (管路小人) */
-         .pos-tab4-tube-head { top: 5%; left: calc(50% + 140px); }
-         .pos-tab4-tube-head::before { top: 50%; left: -20px; transform: translateY(-50%); }
+        /* 電腦版選單位置 - Tab 4 (管路小人) */
+        .pos-tab4-tube-head { top: 5%; left: calc(50% + 140px); }
+        .pos-tab4-tube-head::before { top: 50%; left: -20px; transform: translateY(-50%); }
 
-         .pos-tab4-tube-chest { top: 10%; right: 5%; left: auto; }
-         .pos-tab4-tube-chest::before { top: 50%; left: -20px; right: auto; transform: translateY(-50%); }
+        .pos-tab4-tube-chest { top: 10%; right: 5%; left: auto; }
+        .pos-tab4-tube-chest::before { top: 50%; left: -20px; right: auto; transform: translateY(-50%); }
 
         /* 右手在畫面左側，選單彈在左手手臂的右邊 (朝向中間) */
         .pos-tab4-tube-arm-r { top: 35%; left: 38%; } 
@@ -599,7 +599,8 @@
                 flex-direction: column;
                 pointer-events: auto;
                 padding: 15px;
-                padding-bottom: 60px;
+                /* 確保手機版選單最下方有充足的捲動空間，避免被系統導航列截斷 */
+                padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
             }
 
             .protocol-btn {
@@ -1120,7 +1121,7 @@
                             <span class="list-card-badge">${item.sourceTab} > ${item.sourceRegion}</span>
                         </div>
                         <div class="list-card-body">
-                            <div style="color:#d35400; margin-bottom:6px; font-weight: bold;">⏱ 留置時間：${item.time}</div>
+                            <div style="color:#c0392b; margin-bottom:6px; font-weight: bold;">⏱ 留置時間：${item.time}</div>
                             ${item.note ? `<div style="color:#7f8c8d;">📝 備註：${item.note}</div>` : ''}
                         </div>
                     </div>`;
