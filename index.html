@@ -279,6 +279,26 @@
             z-index: 25;
         }
 
+        /* 手機版返回/關閉按鈕 */
+        .mobile-close-btn {
+            display: none;
+            margin-left: auto;
+            background: #ecf0f1;
+            border: none;
+            font-size: 14px;
+            color: #7f8c8d;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+        }
+        .mobile-close-btn:active {
+            background: #bdc3c7;
+        }
+
         /* 視覺引導線 */
         .protocol-btn::before {
             content: '';
@@ -356,7 +376,7 @@
         }
         .info-time {
             font-size: 15px; /* 放大時間 */
-            color: #d35400; /* 高對比的深橘紅色 */
+            color: #c0392b; /* 高對比的深橘紅色，解決留置時間看不清的問題 */
             font-weight: 600; /* 加粗增強辨識度 */
         }
         .info-note {
@@ -593,14 +613,20 @@
                 z-index: 4; 
             }
 
+            /* 解決手機版展開選單被截斷的問題：解除高度限制，並加上充足底部留白 */
             .protocols-container {
                 position: relative;
                 display: flex;
                 flex-direction: column;
                 pointer-events: auto;
                 padding: 15px;
-                /* 確保手機版選單最下方有充足的捲動空間，避免被系統導航列截斷 */
+                height: auto !important; 
                 padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+            }
+
+            /* 顯示專屬手機版的返回關閉按鈕 */
+            .mobile-close-btn {
+                display: flex;
             }
 
             .protocol-btn {
@@ -730,7 +756,7 @@
                 { id: 'img-respiratory', src: './Respiratory_system.png', alt: '呼吸系統示意圖' },
                 { id: 'img-digestive', src: './digestive_system.png', alt: '消化系統示意圖' },
                 { id: 'img-urinary', src: './Urinary_system.png', alt: '泌尿系統示意圖' },
-                { id: 'img-vital', src: './vital_sing.png', alt: '生命徵象示意圖' },
+                { id: 'img-vital', src: './vital_signs.png', alt: '生命徵象示意圖' },
                 { id: 'img-fluid', src: './Fluid_supply.png', alt: '體液供給示意圖' },
                 { id: 'img-comfort', src: './Comfort_needs.png', alt: '舒適需要示意圖' },
                 { id: 'img-wound', src: './wound_care.png', alt: '傷口照護示意圖' }
@@ -816,7 +842,7 @@
                     items: [
                         { name: 'PICC (短期 <30天)', time: '短期', note: 'Power PICC(2way)：開口端於末端' },
                         { name: 'PICC (長期 >30天)', time: '長期', note: '如Groshong：開口端於側邊' },
-                        { name: 'IC Needle', time: '3-4天', note: '發生靜脈炎或疑似汙染時應立即更換' },
+                        { name: 'IC Needle', time: '4天', note: '發生靜脈炎或疑似汙染時應立即更換' },
                         { name: 'IV cap、針基蓋', time: '4天', note: '疑似汙染或脫離IV Set後應更換' }
                     ] 
                 },
@@ -824,7 +850,7 @@
                     id: 'tube-arm-r', image: 'img-tube-arm-r', title: '💪 右手管路 (A-Line / IC)', badge: 'tube',
                     items: [
                         { name: 'A-Line', time: '7天', note: '' },
-                        { name: 'IC Needle', time: '3-4天', note: '發生靜脈炎或疑似汙染時應立即更換' },
+                        { name: 'IC Needle', time: '4天', note: '發生靜脈炎或疑似汙染時應立即更換' },
                         { name: 'Pressure Kit', time: '4天', note: '包含N/S軟袋' },
                         { name: 'IV set', time: '4天', note: '疑似汙染或明顯髒汙時更換' },
                         { name: 'PICCO', time: '7天', note: '' }
@@ -934,7 +960,10 @@
                 return `
                 <div id="menu-${data.id}-${region.id}" class="protocol-btn ${badgeBtnClass} pos-${data.id}-${region.id}"
                      onmouseenter="enterMenu('${data.id}')" onmouseleave="leaveMenu('${data.id}')">
-                    <div class="protocol-title ${badgeTitleClass}">${region.title}</div>
+                    <div class="protocol-title ${badgeTitleClass}">
+                        <span>${region.title}</span>
+                        <button class="mobile-close-btn" onclick="resetCanvas('${data.id}'); event.stopPropagation();" aria-label="關閉選單">✕</button>
+                    </div>
                     ${itemsHtml}
                 </div>`;
             }).join('');
@@ -1019,7 +1048,7 @@
                 menu.classList.add('locked');
                 if (isMobile()) {
                     setTimeout(() => {
-                        menu.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        menu.scrollIntoView({ behavior: 'smooth', block: 'start' });
                     }, 100);
                 }
             }
