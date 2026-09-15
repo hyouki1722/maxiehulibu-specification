@@ -206,22 +206,34 @@
             background-color: rgba(52, 152, 219, 0.15); /* 輕微反饋 */
         }
 
-        /* 熱區座標 */
-        .hotspot-head { top: 12%; left: 42%; width: 16%; height: 23%; }
-        .hotspot-chest { top: 38%; left: 43%; width: 14%; height: 18%; }
-        .hotspot-abdomen { top: 56%; left: 43%; width: 14%; height: 16%; }
-        .hotspot-body { top: 75%; left: 43%; width: 14%; height: 20%; }
+        /* 熱區座標 - Tab 1 人形圖 */
+        .hotspot-tab1-head { top: 12%; left: 42%; width: 16%; height: 23%; }
+        .hotspot-tab1-chest { top: 38%; left: 43%; width: 14%; height: 18%; }
+        .hotspot-tab1-abdomen { top: 56%; left: 43%; width: 14%; height: 16%; }
+        .hotspot-tab1-body { top: 75%; left: 43%; width: 14%; height: 20%; }
 
-        .hotspot-opd { top: 40%; left: 7%; width: 22%; height: 35%; border-radius: 10px; }
-        .hotspot-er { top: 70%; left: 36%; width: 20%; height: 20%; border-radius: 10px; }
-        .hotspot-or { top: 15%; left: 48%; width: 22%; height: 25%; border-radius: 10px; }
-        .hotspot-pharmacy { top: 70%; left: 27%; width: 8%; height: 8%; border-radius: 10px; }
-        .hotspot-physio { top: 48%; left: 48%; width: 22%; height: 22%; border-radius: 10px; }
-        .hotspot-hospice { top: 15%; left: 8%; width: 22%; height: 20%; border-radius: 10px; }
-        .hotspot-cancer { top: 15%; left: 31%; width: 15%; height: 18%; border-radius: 10px; }
+        /* 熱區座標 - Tab 2 醫院圖 */
+        .hotspot-tab2-opd { top: 40%; left: 7%; width: 22%; height: 35%; border-radius: 10px; }
+        .hotspot-tab2-er { top: 70%; left: 36%; width: 20%; height: 20%; border-radius: 10px; }
+        .hotspot-tab2-or { top: 15%; left: 48%; width: 22%; height: 25%; border-radius: 10px; }
+        .hotspot-tab2-pharmacy { top: 70%; left: 27%; width: 8%; height: 8%; border-radius: 10px; }
+        .hotspot-tab2-physio { top: 48%; left: 48%; width: 22%; height: 22%; border-radius: 10px; }
+        .hotspot-tab2-hospice { top: 15%; left: 8%; width: 22%; height: 20%; border-radius: 10px; }
+        .hotspot-tab2-cancer { top: 15%; left: 31%; width: 15%; height: 18%; border-radius: 10px; }
 
-        .hotspot-admin { top: 45%; left: 30%; width: 18%; height: 25%; border-radius: 10px; }
-        .hotspot-env { top: 45%; left: 52%; width: 18%; height: 25%; border-radius: 10px; }
+        /* 熱區座標 - Tab 3 桌面圖 */
+        .hotspot-tab3-admin { top: 45%; left: 30%; width: 18%; height: 25%; border-radius: 10px; }
+        .hotspot-tab3-env { top: 45%; left: 52%; width: 18%; height: 25%; border-radius: 10px; }
+
+        /* 熱區座標 - Tab 4 管路小人 */
+        .hotspot-tab4-tube-head { top: 5%; left: 35%; width: 25%; height: 25%; } /* 頭頸與鼻管 */
+        .hotspot-tab4-tube-chest { top: 30%; left: 35%; width: 25%; height: 15%; } /* 胸部與鎖骨下 */
+        .hotspot-tab4-tube-arm-r { top: 40%; left: 12%; width: 23%; height: 35%; border-radius: 10%; } /* 右手(畫面左側) */
+        .hotspot-tab4-tube-arm-l { top: 40%; left: 65%; width: 20%; height: 35%; border-radius: 10%; } /* 左手(畫面右側) */
+        .hotspot-tab4-tube-abdomen { top: 45%; left: 35%; width: 25%; height: 15%; } /* 腹部與胃造口 */
+        .hotspot-tab4-tube-pelvis { top: 60%; left: 40%; width: 15%; height: 15%; } /* 骨盆與尿管 */
+        .hotspot-tab4-tube-leg { top: 75%; left: 35%; width: 25%; height: 20%; } /* 雙腿 */
+        .hotspot-tab4-tube-env { top: 5%; left: 5%; width: 25%; height: 35%; border-radius: 10px; } /* 左上角儀器區 */
 
         /* 彈出選單設定 */
         .protocols-container {
@@ -244,7 +256,8 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            min-width: 220px;
+            min-width: 260px; /* 加寬以容納放大的文字 */
+            max-width: 320px; /* 加寬以容納放大的文字 */
             opacity: 0;
             transform: scale(0.92) translateY(5px);
             pointer-events: none;
@@ -257,6 +270,7 @@
             opacity: 1;
             transform: scale(1) translateY(0);
             pointer-events: auto;
+            z-index: 21; /* 顯示時提升層級 */
         }
 
         .protocol-btn:hover {
@@ -278,10 +292,15 @@
             transition: background-color 0.3s;
         }
 
-        .pos-head::before { top: 50%; left: -20px; transform: translateY(-50%); }
-        .pos-chest::before { top: 50%; right: -20px; transform: translateY(-50%); }
-        .pos-abdomen::before { top: 50%; left: -20px; transform: translateY(-50%); }
-        .pos-body::before { top: 50%; right: -20px; transform: translateY(-50%); }
+        /* 通用引導點設定 */
+        .pos-left::before { top: 50%; right: -20px; left: auto; transform: translateY(-50%); } /* 選單在左，點在右 */
+        .pos-right::before { top: 50%; left: -20px; right: auto; transform: translateY(-50%); } /* 選單在右，點在左 */
+        
+        /* Tab 1 的引導點 */
+        .pos-tab1-head::before { top: 50%; left: -20px; transform: translateY(-50%); }
+        .pos-tab1-chest::before { top: 50%; right: -20px; transform: translateY(-50%); }
+        .pos-tab1-abdomen::before { top: 50%; left: -20px; transform: translateY(-50%); }
+        .pos-tab1-body::before { top: 50%; right: -20px; transform: translateY(-50%); }
 
         .protocol-title {
             font-size: var(--title-font-size);
@@ -308,38 +327,203 @@
             border-left: 3px solid transparent;
         }
 
-        .protocol-item:hover,
-        .protocol-item:active {
+        .protocol-item:not(.info-item):hover,
+        .protocol-item:not(.info-item):active {
             background: #ffeaa7;
             color: #d35400;
             border-left: 3px solid #d35400;
             transform: translateX(3px);
         }
 
-        /* 電腦版選單位置 */
-        .pos-head { top: 15%; left: calc(50% + 140px); }
-        .pos-chest { top: 35%; right: calc(50% + 140px); left: auto; }
-        .pos-abdomen { top: 55%; left: calc(50% + 140px); }
-        .pos-body { top: 40%; right: calc(50% + 140px); left: auto; }
+        /* 專為管路小人設計的純資訊卡片樣式 */
+        .info-item {
+            cursor: default !important;
+            border-left: 4px solid #9b59b6 !important; /* 紫色識別 */
+            background: #fdfbfd;
+            padding: 12px 15px; /* 增加內距讓大字體不擁擠 */
+        }
+        .info-item:hover {
+            background: #fdfbfd !important;
+            transform: none !important;
+        }
+
+        /* 管路資訊放大與隱藏備註樣式 */
+        .info-name {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 17px; /* 放大名稱 */
+            margin-bottom: 6px;
+        }
+        .info-time {
+            font-size: 15px; /* 放大時間 */
+            color: #e67e22;
+            font-weight: 500;
+        }
+        .info-note {
+            font-size: 14px; /* 放大備註 */
+            color: #7f8c8d;
+            line-height: 1.5;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #e0e0e0;
+            display: none; /* 預設隱藏 */
+        }
+        .info-item:hover .info-note {
+            display: block; /* 滑鼠懸停時顯示備註 */
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        /* 電腦版選單位置 - Tab 1 */
+        .pos-tab1-head { top: 15%; left: calc(50% + 140px); }
+        .pos-tab1-chest { top: 35%; right: calc(50% + 140px); left: auto; }
+        .pos-tab1-abdomen { top: 55%; left: calc(50% + 140px); }
+        .pos-tab1-body { top: 40%; right: calc(50% + 140px); left: auto; }
         
-        .pos-opd { top: 40%; left: 30%; }
-        .pos-er { top: 60%; left: 57%; }
-        .pos-or { top: 15%; left: 72%; }
-        .pos-pharmacy { top: 70%; left: 10%; }
-        .pos-physio { top: 65%; left: 72%; }
-        .pos-hospice { top: 20%; left: 31%; }
-        .pos-cancer { top: 15%; left: 48%; }
+        /* 電腦版選單位置 - Tab 2 */
+        .pos-tab2-opd { top: 40%; left: 30%; }
+        .pos-tab2-er { top: 60%; left: 57%; }
+        .pos-tab2-or { top: 15%; left: 72%; }
+        .pos-tab2-pharmacy { top: 70%; left: 10%; }
+        .pos-tab2-physio { top: 65%; left: 72%; }
+        .pos-tab2-hospice { top: 20%; left: 31%; }
+        .pos-tab2-cancer { top: 15%; left: 48%; }
 
         .hosp-btn { border-color: #e67e22; }
         .hosp-title { color: #d35400; }
         .hosp-btn::before { display: none; }
 
-        .pos-admin { top: 30%; left: 48%; width: 250px; }
-        .pos-env { top: 30%; left: 25%; width: 250px; }
+        /* 電腦版選單位置 - Tab 3 */
+        .pos-tab3-admin { top: 30%; left: 48%; width: 250px; }
+        .pos-tab3-env { top: 30%; left: 25%; width: 250px; }
 
         .desk-btn { border-color: #27ae60; }
         .desk-title { color: #1e8449; }
         .desk-btn::before { display: none; }
+
+         /* 電腦版選單位置 - Tab 4 (管路小人) */
+         .pos-tab4-tube-head { top: 5%; left: calc(50% + 140px); }
+         .pos-tab4-tube-head::before { top: 50%; left: -20px; transform: translateY(-50%); }
+
+         .pos-tab4-tube-chest { top: 10%; right: 5%; left: auto; }
+         .pos-tab4-tube-chest::before { top: 50%; left: -20px; right: auto; transform: translateY(-50%); }
+
+        /* 右手在畫面左側，選單彈在左手手臂的右邊 (朝向中間) */
+        .pos-tab4-tube-arm-r { top: 35%; left: 38%; } 
+        .pos-tab4-tube-arm-r::before { top: 50%; left: -20px; transform: translateY(-50%); }
+
+        /* 左手在畫面右側，選單彈在左手手臂的左邊 (朝向中間) */
+        .pos-tab4-tube-arm-l { top: 40%; right: 40%; left: auto; } 
+        .pos-tab4-tube-arm-l::before { top: 50%; right: -20px; transform: translateY(-50%); }
+
+        .pos-tab4-tube-abdomen { top: 50%; right: 65%; left: auto; }
+        .pos-tab4-tube-abdomen::before { top: 50%; right: -20px; transform: translateY(-50%); }
+
+        /* 泌尿道與雙腿選單由底部往上長，避免向下撐開被截斷 */
+        .pos-tab4-tube-pelvis { top: auto; bottom: 5%; left: 60%; }
+        .pos-tab4-tube-pelvis::before { bottom: 20px; top: auto; left: -20px; transform: none; }
+
+        .pos-tab4-tube-leg { top: auto; bottom: 5%; right: 65%; left: auto; }
+        .pos-tab4-tube-leg::before { bottom: 20px; top: auto; right: -20px; transform: none; }
+
+        /* 儀器選單彈在儀器的右邊 */
+        .pos-tab4-tube-env { top: 15%; left: 33%; }
+        .pos-tab4-tube-env::before { top: 50%; left: -20px; transform: translateY(-50%); }
+
+        .tube-btn { border-color: #9b59b6; }
+        .tube-title { color: #8e44ad; }
+
+        /* 第五頁籤：總覽與檢索設定 */
+        .search-container { 
+            padding: 15px; 
+            background: white; 
+            border-radius: 8px; 
+            margin-bottom: 15px; 
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); 
+        }
+
+        #searchInput { 
+            width: 100%; 
+            padding: 12px 15px; 
+            font-size: 16px; 
+            border: 2px solid #ddd; 
+            border-radius: 6px; 
+            outline: none; 
+            transition: border-color 0.3s, box-shadow 0.3s; 
+        }
+
+        #searchInput:focus { 
+            border-color: var(--primary-color); 
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .protocol-list-container { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 12px; 
+            overflow-y: auto; 
+            height: calc(100% - 90px); 
+            padding: 5px; 
+        }
+
+        .list-card { 
+            background: white; 
+            padding: 15px; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); 
+            display: flex; 
+            flex-direction: column; 
+            gap: 10px; 
+            text-decoration: none; 
+            border-left: 4px solid var(--primary-color); 
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .list-card:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12); 
+        }
+
+        .list-card.info-card { 
+            border-left-color: #9b59b6; 
+            cursor: default; 
+        }
+
+        .list-card.info-card:hover { 
+            transform: none; 
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); 
+        }
+        
+        .list-card-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-start; 
+            gap: 10px;
+        }
+
+        .list-card-title { 
+            font-size: 16px; 
+            font-weight: bold; 
+            color: #2c3e50; 
+            line-height: 1.4;
+        }
+
+        .list-card-badge { 
+            font-size: 12px; 
+            padding: 4px 10px; 
+            border-radius: 12px; 
+            background: #ecf0f1; 
+            color: #555; 
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .list-card-body { 
+            font-size: 14px; 
+            color: #555; 
+            background: #fdfbfd; 
+            padding: 12px; 
+            border-radius: 6px;
+        }
 
         /* 手機/平板版 RWD */
         @media (max-width: 768px) {
@@ -359,6 +543,10 @@
 
             .header, .tabs { flex-shrink: 0; }
             .header { padding: 15px 10px; }
+            
+            /* 讓標籤可以在手機上水平滑動 */
+            .tabs { overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+            .tabs::-webkit-scrollbar { display: none; }
 
             .content-area {
                 height: 0;
@@ -422,6 +610,7 @@
                 top: auto !important;
                 left: auto !important;
                 right: auto !important;
+                bottom: auto !important;
                 opacity: 1 !important;
                 transform: none !important;
                 margin-bottom: 15px;
@@ -455,6 +644,7 @@
 
             .hosp-btn .protocol-item { border-left-color: #e67e22; }
             .desk-btn .protocol-item { border-left-color: #27ae60; }
+            .tube-btn .protocol-item { border-left-color: #9b59b6; }
         }
     </style>
 </head>
@@ -470,6 +660,8 @@
             <button class="tab-btn active" onclick="switchTab('tab1', this)">🧍 人形圖</button>
             <button class="tab-btn" onclick="switchTab('tab2', this)">🏥 醫院圖</button>
             <button class="tab-btn" onclick="switchTab('tab3', this)">🖥️ 行政庶務圖</button>
+            <button class="tab-btn" onclick="switchTab('tab4', this)">🧪 管路小人</button>
+            <button class="tab-btn" onclick="switchTab('tab5', this)">🔍 總覽與檢索</button>
         </div>
 
         <!-- 頁籤一：人形圖 -->
@@ -502,6 +694,27 @@
                     <div class="hotspots-overlay" id="hotspots-tab3"></div>
                 </div>
                 <div class="protocols-container" id="menus-tab3"></div>
+            </div>
+        </div>
+
+        <!-- 頁籤四：管路小人 -->
+        <div id="tab4" class="content-area">
+            <div class="visual-canvas" id="canvas-tab4">
+                <div class="ratio-container" id="ratio-tab4">
+                    <div class="canvas-bg-clickable" onclick="resetCanvas('tab4')"></div>
+                    <div class="hotspots-overlay" id="hotspots-tab4"></div>
+                </div>
+                <div class="protocols-container" id="menus-tab4"></div>
+            </div>
+        </div>
+
+        <!-- 頁籤五：總覽與檢索 -->
+        <div id="tab5" class="content-area">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="請輸入規範名稱、代碼或部位關鍵字 (例如: 神經, 001, 門診, 胃造口)..." oninput="filterProtocols()">
+            </div>
+            <div class="protocol-list-container" id="all-protocols-list">
+                <!-- 動態生成清單 -->
             </div>
         </div>
     </div>
@@ -565,6 +778,92 @@
             ]
         };
 
+        // ================= 管路小人資料庫 =================
+        const TAB4_DATA = {
+            id: 'tab4',
+            baseImage: { id: 'base-tube', src: './Pipe_Man.jpg', alt: '管路小人示意圖' },
+            images: [
+                { id: 'img-tube-head', src: './Head_neck_and_face_tubing.jpg', alt: '頭頸部管路' },
+                { id: 'img-tube-chest', src: './Thoracic_and_Clavicular_Duct.jpg', alt: '胸部與鎖骨管路' },
+                { id: 'img-tube-abdomen', src: './Abdomen_and_urinary_duct.jpg', alt: '腹部與泌尿管路' },
+                { id: 'img-tube-arm-l', src: './Left_hand_catheter.jpg', alt: '左手管路' },
+                { id: 'img-tube-arm-r', src: './Right_hand_catheter.jpg', alt: '右手管路' },
+                { id: 'img-tube-leg', src: './Lower_limb_tubing.jpg', alt: '下肢管路' },
+                { id: 'img-tube-env', src: './Equipment_and_others.jpg', alt: '設備與其他' }
+            ],
+            regions: [
+                { 
+                    id: 'tube-head', image: 'img-tube-head', title: '👃 頭頸與面部管路', badge: 'tube',
+                    items: [
+                        { name: '氧療蛇行管(T-piece)', time: '非單次使用一周更換一次', note: '髒污或功能失效時需更換' },
+                        { name: 'Suction引流管', time: '7天', note: '' },
+                        { name: 'NG (一般/引流)', time: '灌食: 14天 / 引流: By order', note: '' },
+                        { name: 'Silicon NG tube', time: '一個月', note: '長期使用鼻胃管病人使用' },
+                        { name: 'ND tube', time: '半年', note: '需會診腸胃科安排胃鏡檢查更換' },
+                        { name: '造口器 (銀製/塑膠/鐵氟龍)', time: '28天(四週)', note: '第一次皆由醫師評估/更換' }
+                    ] 
+                },
+                { 
+                    id: 'tube-chest', image: 'img-tube-chest', title: '🫀 中央靜脈與胸部管路', badge: 'tube',
+                    items: [
+                        { name: 'CVP Catheter', time: '7天', note: '暫不更換需有醫囑' },
+                        { name: 'Port-A彎針', time: '7天', note: '' }
+                    ] 
+                },
+                { 
+                    id: 'tube-arm-l', image: 'img-tube-arm-l', title: '💪 左手管路 (PICC / IC)', badge: 'tube',
+                    items: [
+                        { name: 'PICC (短期 <30天)', time: '短期', note: 'Power PICC(2way)：開口端於末端' },
+                        { name: 'PICC (長期 >30天)', time: '長期', note: '如Groshong：開口端於側邊' },
+                        { name: 'IC Needle', time: '3-4天', note: '發生靜脈炎或疑似汙染時應立即更換' },
+                        { name: 'IV cap、針基蓋', time: '4天', note: '疑似汙染或脫離IV Set後應更換' }
+                    ] 
+                },
+                { 
+                    id: 'tube-arm-r', image: 'img-tube-arm-r', title: '💪 右手管路 (A-Line / IC)', badge: 'tube',
+                    items: [
+                        { name: 'A-Line', time: '7天', note: '' },
+                        { name: 'IC Needle', time: '3-4天', note: '發生靜脈炎或疑似汙染時應立即更換' },
+                        { name: 'Pressure Kit', time: '4天', note: '包含N/S軟袋' },
+                        { name: 'IV set', time: '4天', note: '疑似汙染或明顯髒汙時更換' },
+                        { name: 'PICCO', time: '7天', note: '' }
+                    ] 
+                },
+                { 
+                    id: 'tube-abdomen', image: 'img-tube-abdomen', title: '🫃 腹部造口管路', badge: 'tube',
+                    items: [
+                        { name: '胃造口導管 (其他材料)', time: '三個月', note: '例如foley作為胃造口使用' },
+                        { name: '胃造口導管 (PEG)', time: '半年', note: '包括經胃鏡或手術置放方式' }
+                    ] 
+                },
+                { 
+                    id: 'tube-pelvis', image: 'img-tube-abdomen', title: '🚽 泌尿道管路', badge: 'tube',
+                    items: [
+                        { name: '一般Foley & 尿袋', time: '14天', note: '若有漏、異味、沉澱物者p.r.n.更換' },
+                        { name: 'Silicon Foley', time: '一個月', note: '長期病人使用大尿袋' },
+                        { name: 'Cystostomy (膀胱造廔)', time: '三個月', note: '長期病人使用大尿袋' }
+                    ] 
+                },
+                { 
+                    id: 'tube-leg', image: 'img-tube-leg', title: '🦵 下肢管路與其他', badge: 'tube',
+                    items: [
+                        { name: '輸血 set', time: '用後即換', note: 'WB/PC/FP/FFP每輸2U更換，Platelet每輸1PH更換' },
+                        { name: 'Albumin / Intraft / 胺基酸', time: '用後即換', note: '高營養製劑及脂質類輸畢立即換' },
+                        { name: '攜帶型PCA (留置針/Bag)', time: '7天', note: '' }
+                    ] 
+                },
+                { 
+                    id: 'tube-env', image: 'img-tube-env', title: '⚙️ 設備與其他', badge: 'tube',
+                    items: [
+                        { name: 'Pressure Kit', time: '4天', note: '包含N/S軟袋' },
+                        { name: '攜帶型PCA (留置針/Bag)', time: '7天', note: '' },
+                        { name: 'Suction用清水', time: '每天', note: '' },
+                        { name: '洗手液容器 (hibiscrub)', time: '每月', note: '' }
+                    ] 
+                }
+            ]
+        };
+
         const IMG_FALLBACK_SRC = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
             '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">' +
             '<rect width="800" height="450" fill="#f1f3f5"/>' +
@@ -579,10 +878,11 @@
             imgEl.src = IMG_FALLBACK_SRC;
         }
 
-        /* 預載圖片機制：解決首次 Hover 時破圖或白閃的問題 */
+        /* 預載圖片機制 */
         function preloadImages(datasets) {
             datasets.forEach(data => {
-                [data.baseImage, ...data.images].forEach(imgObj => {
+                [data.baseImage, ...(data.images || [])].forEach(imgObj => {
+                    if(!imgObj) return;
                     const img = new Image();
                     img.src = imgObj.src;
                 });
@@ -590,11 +890,10 @@
         }
 
         function renderTab(data) {
-            const ratioContainer = document.getElementById(`ratio-${data.id}`);
             const hotspotsContainer = document.getElementById(`hotspots-${data.id}`);
             const menusContainer = document.getElementById(`menus-${data.id}`);
 
-            const allImages = [data.baseImage, ...data.images];
+            const allImages = [data.baseImage, ...(data.images || [])];
             const imagesHtml = allImages.map((img, idx) => `
                 <img id="${img.id}" src="${img.src}" data-original-src="${img.src}"
                      class="base-image${idx === 0 ? ' active-img' : ''}"
@@ -604,24 +903,35 @@
             hotspotsContainer.insertAdjacentHTML('beforebegin', imagesHtml);
 
             hotspotsContainer.innerHTML = data.regions.map(region => `
-                <div id="hotspot-${data.id}-${region.id}" class="hotspot hotspot-${region.id}"
-                     onmouseenter="hoverRegion('${data.id}', '${region.id}', '${region.image}')"
+                <div id="hotspot-${data.id}-${region.id}" class="hotspot hotspot-${data.id}-${region.id}"
+                     onmouseenter="hoverRegion('${data.id}', '${region.id}', '${region.image || ''}')"
                      onmouseleave="leaveHoverRegion('${data.id}')"
-                     onclick="lockRegion('${data.id}', '${region.id}', '${region.image}')"></div>
+                     onclick="lockRegion('${data.id}', '${region.id}', '${region.image || ''}')"></div>
             `).join('');
 
             menusContainer.innerHTML = data.regions.map(region => {
                 const badgeBtnClass = region.badge ? `${region.badge}-btn` : '';
                 const badgeTitleClass = region.badge ? `${region.badge}-title` : '';
+                
                 const itemsHtml = region.items.map(item => {
-                    const hoverAttrs = item.hoverImage
-                        ? `onmouseenter="hoverItem('${data.id}', '${item.hoverImage}')" onmouseleave="restoreRegionImage('${data.id}')" ontouchstart="hoverItem('${data.id}', '${item.hoverImage}')"`
-                        : '';
-                    return `<a class="protocol-item ext-link" ${hoverAttrs} href="${item.url}" target="_blank">${item.no} ${item.name}</a>`;
+                    if (item.url) {
+                        const hoverAttrs = item.hoverImage
+                            ? `onmouseenter="hoverItem('${data.id}', '${item.hoverImage}')" onmouseleave="restoreRegionImage('${data.id}')" ontouchstart="hoverItem('${data.id}', '${item.hoverImage}')"`
+                            : '';
+                        return `<a class="protocol-item ext-link" ${hoverAttrs} href="${item.url}" target="_blank">${item.no} ${item.name}</a>`;
+                    } else {
+                        // 這是給管路小人用的純資訊卡片 (已加入懸停顯示備註與文字放大邏輯)
+                        return `
+                        <div class="protocol-item info-item">
+                            <div class="info-name">${item.name}</div>
+                            <div class="info-time">⏱ 留置時間：${item.time}</div>
+                            ${item.note ? `<div class="info-note">📝 備註：${item.note}</div>` : ''}
+                        </div>`;
+                    }
                 }).join('');
                 
                 return `
-                <div id="menu-${data.id}-${region.id}" class="protocol-btn ${badgeBtnClass} pos-${region.id}"
+                <div id="menu-${data.id}-${region.id}" class="protocol-btn ${badgeBtnClass} pos-${data.id}-${region.id}"
                      onmouseenter="enterMenu('${data.id}')" onmouseleave="leaveMenu('${data.id}')">
                     <div class="protocol-title ${badgeTitleClass}">${region.title}</div>
                     ${itemsHtml}
@@ -632,7 +942,8 @@
         const state = {
             tab1: { isLocked: false, lockedRegion: null, lockedImageId: null, hoveredImageId: null, baseImageId: 'base-human' },
             tab2: { isLocked: false, lockedRegion: null, lockedImageId: null, hoveredImageId: null, baseImageId: 'base-hospital' },
-            tab3: { isLocked: false, lockedRegion: null, lockedImageId: null, hoveredImageId: null, baseImageId: 'base-desktop' }
+            tab3: { isLocked: false, lockedRegion: null, lockedImageId: null, hoveredImageId: null, baseImageId: 'base-desktop' },
+            tab4: { isLocked: false, lockedRegion: null, lockedImageId: null, hoveredImageId: null, baseImageId: 'base-tube' }
         };
 
         let hoverTimer;
@@ -688,7 +999,6 @@
                 return;
             }
 
-            // 清除其他熱區的選取狀態
             document.querySelectorAll(`#${tabId} .hotspot`).forEach(h => h.classList.remove('active'));
             document.getElementById(`hotspot-${tabId}-${regionId}`)?.classList.add('active');
 
@@ -706,8 +1016,6 @@
             const menu = document.getElementById(`menu-${tabId}-${regionId}`);
             if (menu) {
                 menu.classList.add('locked');
-                
-                // 優化：手機版點擊後平滑滾動至選單，確保使用者看得到
                 if (isMobile()) {
                     setTimeout(() => {
                         menu.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -753,13 +1061,91 @@
             document.querySelectorAll(`#${tabId} .protocol-btn:not(.locked)`).forEach(menu => menu.classList.remove('show'));
         }
 
+        // ================= 第五頁籤：總覽與檢索邏輯 =================
+        let allProtocolsData = [];
+
+        function compileAllProtocols() {
+            const tabs = [
+                { data: TAB1_DATA, name: '人形圖' },
+                { data: TAB2_DATA, name: '醫院圖' },
+                { data: TAB3_DATA, name: '行政圖' },
+                { data: TAB4_DATA, name: '管路小人' }
+            ];
+
+            tabs.forEach(tab => {
+                tab.data.regions.forEach(region => {
+                    region.items.forEach(item => {
+                        allProtocolsData.push({
+                            ...item,
+                            sourceTab: tab.name,
+                            // 移除 Title 中的 Emoji 以利介面簡潔閱讀
+                            sourceRegion: region.title.replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]\s*/g, '').trim(), 
+                            badgeColor: region.badge
+                        });
+                    });
+                });
+            });
+        }
+
+        function renderAllProtocols(filterText = '') {
+            const container = document.getElementById('all-protocols-list');
+            container.innerHTML = '';
+            
+            const lowerFilter = filterText.toLowerCase().trim();
+            
+            const filtered = allProtocolsData.filter(item => {
+                const textToSearch = `${item.no || ''} ${item.name} ${item.sourceTab} ${item.sourceRegion} ${item.note || ''}`.toLowerCase();
+                return textToSearch.includes(lowerFilter);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding: 40px; color: #95a5a6; font-size: 16px;">找不到符合的規範項目，請嘗試其他關鍵字。</div>';
+                return;
+            }
+
+            const html = filtered.map(item => {
+                if (item.url) {
+                    return `
+                    <a href="${item.url}" target="_blank" class="list-card ext-link">
+                        <div class="list-card-header">
+                            <span class="list-card-title">${item.no ? `<span style="color:var(--primary-color)">[${item.no}]</span> ` : ''}${item.name}</span>
+                            <span class="list-card-badge">${item.sourceTab} > ${item.sourceRegion}</span>
+                        </div>
+                    </a>`;
+                } else {
+                    return `
+                    <div class="list-card info-card">
+                        <div class="list-card-header">
+                            <span class="list-card-title">${item.name}</span>
+                            <span class="list-card-badge">${item.sourceTab} > ${item.sourceRegion}</span>
+                        </div>
+                        <div class="list-card-body">
+                            <div style="color:#d35400; margin-bottom:6px; font-weight: bold;">⏱ 留置時間：${item.time}</div>
+                            ${item.note ? `<div style="color:#7f8c8d;">📝 備註：${item.note}</div>` : ''}
+                        </div>
+                    </div>`;
+                }
+            }).join('');
+            
+            container.innerHTML = html;
+        }
+
+        function filterProtocols() {
+            const val = document.getElementById('searchInput').value;
+            renderAllProtocols(val);
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
-            // 背景非同步預先載入所有圖片
-            setTimeout(() => preloadImages([TAB1_DATA, TAB2_DATA, TAB3_DATA]), 100);
+            setTimeout(() => preloadImages([TAB1_DATA, TAB2_DATA, TAB3_DATA, TAB4_DATA]), 100);
 
             renderTab(TAB1_DATA);
             renderTab(TAB2_DATA);
             renderTab(TAB3_DATA);
+            renderTab(TAB4_DATA);
+
+            // 初始化第五個頁籤
+            compileAllProtocols();
+            renderAllProtocols();
 
             document.addEventListener('click', function (e) {
                 const link = e.target.closest('a.ext-link');
