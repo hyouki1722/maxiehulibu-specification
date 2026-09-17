@@ -921,6 +921,31 @@
             ]
         };
 
+        /* ============================================================
+           快取破壞 (Cache Busting)
+           ------------------------------------------------------------
+           護理人員或其他使用者的手機/電腦瀏覽器，通常會把圖片檔案快取
+           (暫存)起來，即使我們換了新圖片、檔名完全相同，使用者端也可能
+           繼續看到舊圖，除非他們自己手動清除快取或強制重新整理。
+
+           解決方式：在每張圖片網址後面加上 ?v=版本號，對瀏覽器來說
+           「網址不同 = 不同的檔案」，就會自動重新下載最新的圖片，
+           完全不需要教使用者怎麼操作。
+
+           【日後更新圖片時，你只需要做這一件事】
+           把下面 ASSET_VERSION 的值改掉即可（建議直接改成當天日期，
+           例如 '20260101'、'20260215'...，方便自己記錄哪天更新過）。
+           改完存檔、重新上傳網頁後，所有人下次打開網頁就會自動抓到新圖，
+           不需要再動任何其他地方的程式碼。
+           ============================================================ */
+        const ASSET_VERSION = '20260917';
+
+        function withVersion(src) {
+            if (!src) return src;
+            const separator = src.includes('?') ? '&' : '?';
+            return `${src}${separator}v=${ASSET_VERSION}`;
+        }
+
         const IMG_FALLBACK_SRC = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(
             '<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">' +
             '<rect width="800" height="450" fill="#f1f3f5"/>' +
@@ -940,7 +965,7 @@
                 [data.baseImage, ...(data.images || [])].forEach(imgObj => {
                     if(!imgObj) return;
                     const img = new Image();
-                    img.src = imgObj.src;
+                    img.src = withVersion(imgObj.src);
                 });
             });
         }
@@ -951,12 +976,13 @@
 
             const allImages = [data.baseImage, ...(data.images || [])];
             const imagesHtml = allImages.map((img, idx) => `
-                <img id="${img.id}" src="${img.src}" data-original-src="${img.src}"
+                <img id="${img.id}" src="${withVersion(img.src)}" data-original-src="${img.src}"
                      class="base-image${idx === 0 ? ' active-img' : ''}"
                      loading="lazy" alt="${img.alt || ''}"
                      onerror="handleImageError(this)">
             `).join('');
             hotspotsContainer.insertAdjacentHTML('beforebegin', imagesHtml);
+
 
             hotspotsContainer.innerHTML = data.regions.map(region => `
                 <div id="hotspot-${data.id}-${region.id}" class="hotspot hotspot-${data.id}-${region.id}"
