@@ -22,7 +22,6 @@
         :root {
             --app-max-width: 1100px;
             --base-font-size: 16px;
-            /* 全面放大字體設定 */
             --menu-font-size: 16px;
             --title-font-size: 19px;
             --primary-color: #3498db;
@@ -206,11 +205,11 @@
             background-color: rgba(52, 152, 219, 0.15);
         }
 
-        /* 熱區座標 - Tab 1 人形圖 */
-        .hotspot-tab1-head { top: 12%; left: 42%; width: 16%; height: 23%; }
-        .hotspot-tab1-chest { top: 38%; left: 43%; width: 14%; height: 18%; }
-        .hotspot-tab1-abdomen { top: 56%; left: 43%; width: 14%; height: 16%; }
-        .hotspot-tab1-body { top: 75%; left: 43%; width: 14%; height: 20%; }
+        /* 熱區座標 - Tab 1 人形圖 (重新調整高度避免遮擋臉部) */
+        .hotspot-tab1-head { top: 15%; left: 40%; width: 20%; height: 20%; }
+        .hotspot-tab1-body { top: 75%; left: 35%; width: 30%; height: 20%; } /* 全身改至下半部涵蓋雙腿 */
+        .hotspot-tab1-chest { top: 43%; left: 42%; width: 16%; height: 14%; } /* 胸部下移至肩膀以下 */
+        .hotspot-tab1-abdomen { top: 58%; left: 42%; width: 16%; height: 14%; }
 
         /* 熱區座標 - Tab 2 醫院圖 */
         .hotspot-tab2-opd { top: 40%; left: 7%; width: 22%; height: 35%; border-radius: 10px; }
@@ -234,6 +233,7 @@
         .hotspot-tab4-tube-pelvis { top: 60%; left: 40%; width: 15%; height: 15%; }
         .hotspot-tab4-tube-leg { top: 75%; left: 35%; width: 25%; height: 20%; }
         .hotspot-tab4-tube-env { top: 5%; left: 5%; width: 25%; height: 35%; border-radius: 10px; }
+        .hotspot-tab4-tube-chest-drain { top: 50%; left: 75%; width: 20%; height: 30%; border-radius: 10px; }
 
         /* 熱區座標 - Tab 6 傷口小人 */
         .hotspot-tab6-wound-neck { top: 12%; left: 42%; width: 16%; height: 15%; }
@@ -271,6 +271,7 @@
             pointer-events: none;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             backdrop-filter: blur(4px);
+            /* 注意：這裡不再設置 overflow: hidden，讓偽元素能自由顯示 */
         }
 
         /* 內部捲動區塊：負責限制高度並產生捲動軸 */
@@ -438,16 +439,18 @@
         }
 
         /* --- 電腦版選單位置 --- */
-        /* Tab 1 */
-        .pos-tab1-head { top: 15%; left: calc(50% + 140px); }
-        .pos-tab1-chest { top: 35%; right: calc(50% + 140px); left: auto; }
-        .pos-tab1-abdomen { top: 55%; left: calc(50% + 140px); }
-        .pos-tab1-body { top: 40%; right: calc(50% + 140px); left: auto; }
-        
+        /* Tab 1 人形圖選單定位與防呆紅點設定 */
+        .pos-tab1-head { top: 15%; left: calc(50% + 150px); }
         .pos-tab1-head::before { top: 50%; left: -20px; transform: translateY(-50%); }
-        .pos-tab1-chest::before { top: 50%; right: -20px; transform: translateY(-50%); }
-        .pos-tab1-abdomen::before { top: 50%; left: -20px; transform: translateY(-50%); }
-        .pos-tab1-body::before { top: 50%; right: -20px; transform: translateY(-50%); }
+
+        .pos-tab1-body { top: 40%; right: calc(50% + 150px); left: auto; }
+        .pos-tab1-body::before { top: 50%; right: -20px; left: auto; transform: translateY(-50%); }
+
+        .pos-tab1-chest { top: 45%; left: calc(50% + 150px); }
+        .pos-tab1-chest::before { top: 50%; left: -20px; right: auto; transform: translateY(-50%); }
+        
+        .pos-tab1-abdomen { top: 60%; right: calc(50% + 150px); left: auto; }
+        .pos-tab1-abdomen::before { top: 50%; right: -20px; left: auto; transform: translateY(-50%); }
         
         /* Tab 2 */
         .pos-tab2-opd { top: 40%; left: 30%; }
@@ -491,6 +494,8 @@
         
         .pos-tab4-tube-env { top: 15%; left: 33%; }
         .pos-tab4-tube-env::before { top: 50%; left: -20px; transform: translateY(-50%); }
+        .pos-tab4-tube-chest-drain { top: 35%; right: 5%; left: auto; width: 280px; }
+        .pos-tab4-tube-chest-drain::before { top: 50%; left: -20px; right: auto; transform: translateY(-50%); }
 
         .tube-btn { border-color: #9b59b6; }
         .tube-title { color: #8e44ad; }
@@ -718,17 +723,17 @@
                 { id: 'img-respiratory', src: './Respiratory_system.png', alt: '呼吸系統示意圖' },
                 { id: 'img-digestive', src: './digestive_system.png', alt: '消化系統示意圖' },
                 { id: 'img-urinary', src: './Urinary_system.png', alt: '泌尿系統示意圖' },
-                /* 修正副檔名為 sing 以對應實際檔名 */
                 { id: 'img-vital', src: './vital_sing.png', alt: '生命徵象示意圖' },
                 { id: 'img-fluid', src: './Fluid_supply.png', alt: '體液供給示意圖' },
                 { id: 'img-comfort', src: './Comfort_needs.png', alt: '舒適需要示意圖' },
                 { id: 'img-wound', src: './wound_care.png', alt: '傷口照護示意圖' }
             ],
+            // 【核心修改】已將陣列順序更改為：頭部 -> 全身 -> 胸部 -> 腹部
             regions: [
                 { id: 'head', image: 'img-nervous', title: '🧠 頭部 (神經系統)', badge: null, items: [{ no: '015', name: '神經感覺系統', url: 'https://drive.google.com/drive/folders/12VOsJeTQ-9hwwenurnduTRP0vrgo_xx7?usp=drive_link' }] },
+                { id: 'body', image: 'img-vital', title: '🩸 全身性 (體徵與皮膚)', badge: null, items: [{ no: '001', name: '生命徵象.疼痛.情緒困擾', url: 'https://drive.google.com/drive/folders/1omd_6gZsQcPwunujpwxd84qgLnrx8e92?usp=drive_link', hoverImage: 'img-vital' }, { no: '002', name: '體液供給', url: 'https://drive.google.com/drive/folders/1vSrsuosLLVV4ocY4h2b1eDl8C6BwYxB7?usp=drive_link', hoverImage: 'img-fluid' }, { no: '011', name: '舒適需要', url: 'https://drive.google.com/drive/folders/1ODrOuVaCIt0mE9BH7CGAmJtQ0pQFqk9T?usp=drive_link', hoverImage: 'img-comfort' }, { no: '020', name: '傷口照護', url: 'https://drive.google.com/drive/folders/1FQqTWZunZp0pbhMKfx-yrLtiZ0W5PZnR?usp=drive_link', hoverImage: 'img-wound' }] },
                 { id: 'chest', image: 'img-circulatory', title: '🫁 胸部 (心肺系統)', badge: null, items: [{ no: '013', name: '心臟血管系統護理', url: 'https://drive.google.com/drive/folders/1E37ZeXwyxT4jpMZoeNtkM1Fh1fgbKSwz?usp=drive_link', hoverImage: 'img-circulatory' }, { no: '014', name: '呼吸系統', url: 'https://drive.google.com/drive/folders/1JJtMeUILg1M1nRFslp1-cR5Dv0qutPmY?usp=drive_link', hoverImage: 'img-respiratory' }] },
-                { id: 'abdomen', image: 'img-digestive', title: '🩺 腹部 (消化與泌尿)', badge: null, items: [{ no: '012', name: '消化道系統護理', url: 'https://drive.google.com/drive/folders/1NfBIMXB8LZme0O1S5afTLTAZEEm5T7h7?usp=drive_link', hoverImage: 'img-digestive' }, { no: '016', name: '腎臟泌尿系統', url: 'https://drive.google.com/drive/folders/1VIhzRwqwzf36dcTHrkgJAo6LJIuUDhke?usp=drive_link', hoverImage: 'img-urinary' }] },
-                { id: 'body', image: 'img-vital', title: '🩸 全身性 (體徵與皮膚)', badge: null, items: [{ no: '001', name: '生命徵象.疼痛.情緒困擾', url: 'https://drive.google.com/drive/folders/1omd_6gZsQcPwunujpwxd84qgLnrx8e92?usp=drive_link', hoverImage: 'img-vital' }, { no: '002', name: '體液供給', url: 'https://drive.google.com/drive/folders/1vSrsuosLLVV4ocY4h2b1eDl8C6BwYxB7?usp=drive_link', hoverImage: 'img-fluid' }, { no: '011', name: '舒適需要', url: 'https://drive.google.com/drive/folders/1ODrOuVaCIt0mE9BH7CGAmJtQ0pQFqk9T?usp=drive_link', hoverImage: 'img-comfort' }, { no: '020', name: '傷口照護', url: 'https://drive.google.com/drive/folders/1FQqTWZunZp0pbhMKfx-yrLtiZ0W5PZnR?usp=drive_link', hoverImage: 'img-wound' }] }
+                { id: 'abdomen', image: 'img-digestive', title: '🩺 腹部 (消化與泌尿)', badge: null, items: [{ no: '012', name: '消化道系統護理', url: 'https://drive.google.com/drive/folders/1NfBIMXB8LZme0O1S5afTLTAZEEm5T7h7?usp=drive_link', hoverImage: 'img-digestive' }, { no: '016', name: '腎臟泌尿系統', url: 'https://drive.google.com/drive/folders/1VIhzRwqwzf36dcTHrkgJAo6LJIuUDhke?usp=drive_link', hoverImage: 'img-urinary' }] }
             ]
         };
 
@@ -778,7 +783,8 @@
                 { id: 'img-tube-arm-l', src: './Left_hand_catheter.jpg', alt: '左手管路' },
                 { id: 'img-tube-arm-r', src: './Right_hand_catheter.jpg', alt: '右手管路' },
                 { id: 'img-tube-leg', src: './Lower_limb_tubing.jpg', alt: '下肢管路' },
-                { id: 'img-tube-env', src: './Equipment_and_others.jpg', alt: '設備與其他' }
+                { id: 'img-tube-env', src: './Equipment_and_others.jpg', alt: '設備與其他' },
+                { id: 'img-tube-chest-drain', src: './Chest_drainage_bottle.jpg', alt: '胸腔引流瓶' }
             ],
             regions: [
                 { 
@@ -938,7 +944,7 @@
            改完存檔、重新上傳網頁後，所有人下次打開網頁就會自動抓到新圖，
            不需要再動任何其他地方的程式碼。
            ============================================================ */
-        const ASSET_VERSION = '20260917';
+        const ASSET_VERSION = '20260923';
 
         function withVersion(src) {
             if (!src) return src;
@@ -1015,7 +1021,7 @@
                     }
                 }).join('');
                 
-                // 【核心修改】將項目列表包裹在一層新的 div.protocol-items-wrapper 之中，專門用來處理內部捲動
+                // 將項目列表包裹在一層新的 div.protocol-items-wrapper 之中，專門用來處理內部捲動
                 return `
                 <div id="menu-${data.id}-${region.id}" class="protocol-btn ${badgeBtnClass} pos-${data.id}-${region.id}"
                      onmouseenter="enterMenu('${data.id}')" onmouseleave="leaveMenu('${data.id}')">
