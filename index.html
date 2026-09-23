@@ -236,8 +236,9 @@
         /* 熱區座標 - Tab 1 人形圖 */
         .hotspot-tab1-head { top: 10%; left: 40%; width: 20%; height: 25%; }
         .hotspot-tab1-body { top: 35%; left: 30%; width: 40%; height: 60%; }
-        .hotspot-tab1-chest { top: 40%; left: 35%; width: 30%; height: 20%; }
-        .hotspot-tab1-abdomen { top: 60%; left: 35%; width: 30%; height: 20%; }
+        /* 將胸部與腹部熱區往下移，並縮小範圍使其更精準 */
+        .hotspot-tab1-chest { top: 48%; left: 38%; width: 24%; height: 14%; }
+        .hotspot-tab1-abdomen { top: 64%; left: 38%; width: 24%; height: 14%; }
 
         .hotspot-tab2-er { top: 70%; left: 36%; width: 20%; height: 20%; border-radius: 10px; }
         .hotspot-tab2-or { top: 15%; left: 48%; width: 22%; height: 25%; border-radius: 10px; }
@@ -867,7 +868,8 @@
                     id: 'tube-leg', image: 'img-tube-leg', title: '🦵 下肢管路與其他', badge: 'tube',
                     items: [
                         { name: '輸血 set', time: '用後即換', note: 'WB/PC/FP/FFP每輸2U更換，Platelet每輸1PH更換' },
-                        { name: 'Albumin / Intraft / 胺基酸', time: '用後即換', note: '高營養製劑及脂質類輸畢立即換' }
+                        { name: 'Albumin / Intraft / 胺基酸', time: '用後即換', note: '高營養製劑及脂質類輸畢立即更換' },
+                        { name: '輸液 set', time: '4天', note: '疑似汙染或明顯髒汙時更換' }
                     ] 
                 },
                 { 
