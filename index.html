@@ -175,26 +175,6 @@
             z-index: 2;
         }
 
-        /* 醫院圖提示標籤 */
-        .disclaimer-badge {
-            position: absolute;
-            top: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.7);
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-size: 18px; /* 字體從 14px 放大至 18px */
-            font-weight: bold; /* 加上粗體 */
-            letter-spacing: 1px; /* 增加一點字距讓閱讀更舒適 */
-            z-index: 10;
-            pointer-events: none;
-            white-space: nowrap;
-            backdrop-filter: blur(4px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 加上陰影增加立體感 */
-        }
-
         .hotspots-overlay {
             position: absolute;
             top: 0;
@@ -205,9 +185,9 @@
             pointer-events: none;
         }
 
-        /* 增強版熱區閃爍動畫：波紋更亮、擴散範圍更大、節奏更緊湊 */
+        /* 強化版熱區閃爍動畫 */
         @keyframes pulseIndicator {
-            0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.8); }
+            0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.7); }
             70% { box-shadow: 0 0 0 20px rgba(52, 152, 219, 0); }
             100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
         }
@@ -218,32 +198,32 @@
             border-radius: 40%;
             z-index: 10;
             pointer-events: auto;
-            transition: all 0.3s;
-            /* 視覺增強：加入常駐的淺藍底色與半透明邊框，一眼就能看清範圍 */
+            /* 加入常駐淺藍色底色與邊框，讓熱區無時無刻都很清晰 */
             background-color: rgba(52, 152, 219, 0.15);
             border: 2px solid rgba(52, 152, 219, 0.4);
-            /* 動畫時間由 2.5s 縮短為 1.5s，更具引導感 */
+            transition: background-color 0.3s, border-color 0.3s;
+            /* 縮短動畫週期為 1.5 秒，提升動態感 */
             animation: pulseIndicator 1.5s infinite;
         }
 
         .hotspot:hover, .hotspot.active {
             animation: none;
-            background-color: rgba(52, 152, 219, 0.4); /* 游標滑過時顏色明顯加深 */
-            border-color: rgba(52, 152, 219, 0.9);
-            box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
+            background-color: rgba(52, 152, 219, 0.3);
+            border-color: rgba(52, 152, 219, 0.8);
         }
 
         /* 熱區座標 - Tab 1 人形圖 */
         .hotspot-tab1-head { top: 10%; left: 40%; width: 20%; height: 25%; }
         .hotspot-tab1-body { top: 35%; left: 30%; width: 40%; height: 60%; }
-        /* 將胸部與腹部熱區往下移，並縮小範圍使其更精準 */
-        .hotspot-tab1-chest { top: 48%; left: 38%; width: 24%; height: 14%; }
-        .hotspot-tab1-abdomen { top: 64%; left: 38%; width: 24%; height: 14%; }
+        .hotspot-tab1-chest { top: 46%; left: 38%; width: 24%; height: 14%; } /* 向下移，避開下巴 */
+        .hotspot-tab1-abdomen { top: 62%; left: 38%; width: 24%; height: 14%; }
 
+        /* 熱區座標 - Tab 2 醫院圖 */
+        .hotspot-tab2-opd { top: 55%; left: 14%; width: 25%; height: 32%; border-radius: 10px; } /* 新增門診區熱區 */
         .hotspot-tab2-er { top: 70%; left: 36%; width: 20%; height: 20%; border-radius: 10px; }
         .hotspot-tab2-or { top: 15%; left: 48%; width: 22%; height: 25%; border-radius: 10px; }
         .hotspot-tab2-pharmacy { top: 70%; left: 27%; width: 8%; height: 8%; border-radius: 10px; }
-        .hotspot-tab2-physio { top: 48%; left: 48%; width: 22%; height: 22%; border-radius: 10px; }
+        .hotspot-tab2-physio { top: 48%; left: 42%; width: 28%; height: 25%; border-radius: 10px; } /* 置中紫色區域 */
         .hotspot-tab2-hospice { top: 15%; left: 8%; width: 22%; height: 20%; border-radius: 10px; }
         .hotspot-tab2-cancer { top: 15%; left: 31%; width: 15%; height: 18%; border-radius: 10px; }
 
@@ -300,7 +280,7 @@
             backdrop-filter: blur(4px);
         }
 
-        /* 內部捲動區塊：負責限制高度並產生捲動軸，完美解決紅點被裁切問題 */
+        /* 內部捲動區塊：負責限制高度並產生捲動軸 */
         .protocol-items-wrapper {
             display: flex;
             flex-direction: column;
@@ -464,19 +444,37 @@
             background: #fff9e6 !important;
         }
 
+        /* 醫院圖提示標籤 */
+        .disclaimer-badge {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 18px; /* 字體從 14px 放大至 18px */
+            font-weight: bold; /* 加上粗體 */
+            letter-spacing: 1px; /* 增加一點字距讓閱讀更舒適 */
+            z-index: 10;
+            pointer-events: none;
+            white-space: nowrap;
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 加上陰影增加立體感 */
+        }
+
         /* --- 電腦版選單位置 --- */
-        /* Tab 1 人形圖選單定位與防呆紅點設定 */
-        .pos-tab1-head { top: 15%; left: calc(50% + 140px); }
-        .pos-tab1-head::before { top: 50%; left: -20px; transform: translateY(-50%); }
-
-        .pos-tab1-body { top: 40%; right: calc(50% + 140px); left: auto; }
-        .pos-tab1-body::before { top: 50%; right: -20px; left: auto; transform: translateY(-50%); }
-
-        .pos-tab1-chest { top: 45%; left: calc(50% + 140px); }
-        .pos-tab1-chest::before { top: 50%; left: -20px; right: auto; transform: translateY(-50%); }
+        /* Tab 1 */
+        .pos-tab1-head { top: 15%; left: calc(50% + 160px); }
+        .pos-tab1-body { top: 30%; right: calc(50% + 160px); left: auto; }
+        .pos-tab1-chest { top: 50%; left: calc(50% + 160px); }
+        .pos-tab1-abdomen { top: 70%; right: calc(50% + 160px); left: auto; }
         
-        .pos-tab1-abdomen { top: 60%; right: calc(50% + 140px); left: auto; }
-        .pos-tab1-abdomen::before { top: 50%; right: -20px; left: auto; transform: translateY(-50%); }
+        .pos-tab1-head::before { top: 50%; left: -20px; transform: translateY(-50%); }
+        .pos-tab1-body::before { top: 50%; right: -20px; transform: translateY(-50%); }
+        .pos-tab1-chest::before { top: 50%; left: -20px; transform: translateY(-50%); }
+        .pos-tab1-abdomen::before { top: 50%; right: -20px; transform: translateY(-50%); }
         
         /* Tab 2 */
         .pos-tab2-opd { top: 40%; left: 30%; }
@@ -690,9 +688,10 @@
         <div id="tab2" class="content-area">
             <div class="visual-canvas" id="canvas-tab2">
                 <div class="ratio-container" id="ratio-tab2">
-                    <div class="disclaimer-badge">⚠ 此為示意圖非實際院內地形圖</div>
                     <div class="canvas-bg-clickable" onclick="resetCanvas('tab2')"></div>
                     <div class="hotspots-overlay" id="hotspots-tab2"></div>
+                    <!-- 醫院地圖專屬免責提醒 -->
+                    <div class="disclaimer-badge">⚠ 此為示意圖非實際院內地形圖</div>
                 </div>
                 <div class="protocols-container" id="menus-tab2"></div>
             </div>
@@ -755,7 +754,6 @@
                 { id: 'img-comfort', src: './Comfort_needs.png', alt: '舒適需要示意圖' },
                 { id: 'img-wound', src: './wound_care.png', alt: '傷口照護示意圖' }
             ],
-            // 已將陣列順序更改為：頭部 -> 全身 -> 胸部 -> 腹部
             regions: [
                 { id: 'head', image: 'img-nervous', title: '🧠 頭部 (神經系統)', badge: null, items: [{ no: '015', name: '神經感覺系統', url: 'https://drive.google.com/drive/folders/12VOsJeTQ-9hwwenurnduTRP0vrgo_xx7?usp=drive_link' }] },
                 { id: 'body', image: 'img-vital', title: '🩸 全身性 (體徵與皮膚)', badge: null, items: [{ no: '001', name: '生命徵象.疼痛.情緒困擾', url: 'https://drive.google.com/drive/folders/1omd_6gZsQcPwunujpwxd84qgLnrx8e92?usp=drive_link', hoverImage: 'img-vital' }, { no: '002', name: '體液供給', url: 'https://drive.google.com/drive/folders/1vSrsuosLLVV4ocY4h2b1eDl8C6BwYxB7?usp=drive_link', hoverImage: 'img-fluid' }, { no: '011', name: '舒適需要', url: 'https://drive.google.com/drive/folders/1ODrOuVaCIt0mE9BH7CGAmJtQ0pQFqk9T?usp=drive_link', hoverImage: 'img-comfort' }, { no: '020', name: '傷口照護', url: 'https://drive.google.com/drive/folders/1FQqTWZunZp0pbhMKfx-yrLtiZ0W5PZnR?usp=drive_link', hoverImage: 'img-wound' }] },
@@ -868,7 +866,7 @@
                     id: 'tube-leg', image: 'img-tube-leg', title: '🦵 下肢管路與其他', badge: 'tube',
                     items: [
                         { name: '輸血 set', time: '用後即換', note: 'WB/PC/FP/FFP每輸2U更換，Platelet每輸1PH更換' },
-                        { name: 'Albumin / Intraft / 胺基酸', time: '用後即換', note: '高營養製劑及脂質類輸畢立即更換' },
+                        { name: 'Albumin / Intraft / 胺基酸', time: '用後即換', note: '高營養製劑及脂質類輸畢立即換' },
                         { name: '輸液 set', time: '4天', note: '疑似汙染或明顯髒汙時更換' }
                     ] 
                 },
@@ -880,11 +878,17 @@
                         { name: 'Suction用清水', time: '每天', note: '' },
                         { name: '洗手液容器 (hibiscrub)', time: '每月', note: '' }
                     ] 
+                },
+                { 
+                    id: 'tube-chest-drain', image: 'img-tube-chest-drain', title: '🫙 胸腔引流系統', badge: 'tube',
+                    items: [
+                        { name: '胸腔引流瓶', time: '液面達 2/3 滿時更換', note: '引流瓶破損、傾倒或疑似污染時需立即更換；平時需保持直立並低於胸部插管處60公分。' },
+                        { name: '胸腔引流連接管', time: 'PRN', note: '管路密閉系統破壞、接頭鬆脫或有沉積物阻塞時更換。' }
+                    ] 
                 }
             ]
         };
 
-        // ================= 傷口小人資料庫 =================
         const TAB6_DATA = {
             id: 'tab6',
             baseImage: { id: 'base-wound', src: './Wounded_Little_Man_Picture.jpg', alt: '傷口小人示意圖' }, 
@@ -954,7 +958,6 @@
             ]
         };
 
-        /* 快取破壞版本號更新 */
         const ASSET_VERSION = '20260923';
 
         function withVersion(src) {
@@ -1021,7 +1024,6 @@
                             : '';
                         return `<a class="protocol-item ext-link" ${hoverAttrs} href="${item.url}" target="_blank">${item.no} ${item.name}</a>`;
                     } else {
-                        // 針對沒有網址的內部資訊，綁定手風琴特效點擊事件
                         return `
                         <div class="protocol-item info-item" onclick="this.classList.toggle('expand')">
                             <div class="info-name">${item.name}</div>
