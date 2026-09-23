@@ -178,18 +178,21 @@
         /* 醫院圖提示標籤 */
         .disclaimer-badge {
             position: absolute;
-            top: 10px;
+            top: 15px;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.65);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-size: 18px; /* 字體從 14px 放大至 18px */
+            font-weight: bold; /* 加上粗體 */
+            letter-spacing: 1px; /* 增加一點字距讓閱讀更舒適 */
             z-index: 10;
             pointer-events: none;
             white-space: nowrap;
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(4px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* 加上陰影增加立體感 */
         }
 
         .hotspots-overlay {
@@ -202,9 +205,10 @@
             pointer-events: none;
         }
 
+        /* 增強版熱區閃爍動畫：波紋更亮、擴散範圍更大、節奏更緊湊 */
         @keyframes pulseIndicator {
-            0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.5); }
-            70% { box-shadow: 0 0 0 12px rgba(52, 152, 219, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.8); }
+            70% { box-shadow: 0 0 0 20px rgba(52, 152, 219, 0); }
             100% { box-shadow: 0 0 0 0 rgba(52, 152, 219, 0); }
         }
 
@@ -214,23 +218,22 @@
             border-radius: 40%;
             z-index: 10;
             pointer-events: auto;
-            transition: background-color 0.3s;
-            animation: pulseIndicator 2.5s infinite;
+            transition: all 0.3s;
+            /* 視覺增強：加入常駐的淺藍底色與半透明邊框，一眼就能看清範圍 */
+            background-color: rgba(52, 152, 219, 0.15);
+            border: 2px solid rgba(52, 152, 219, 0.4);
+            /* 動畫時間由 2.5s 縮短為 1.5s，更具引導感 */
+            animation: pulseIndicator 1.5s infinite;
         }
 
         .hotspot:hover, .hotspot.active {
             animation: none;
-            background-color: rgba(52, 152, 219, 0.15);
+            background-color: rgba(52, 152, 219, 0.4); /* 游標滑過時顏色明顯加深 */
+            border-color: rgba(52, 152, 219, 0.9);
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.5);
         }
 
-        /* 熱區座標 - Tab 1 人形圖 (順序與位置大幅翻新，胸部落於肩膀下) */
-        .hotspot-tab1-head { top: 15%; left: 42%; width: 16%; height: 20%; }
-        .hotspot-tab1-chest { top: 43%; left: 42%; width: 16%; height: 15%; }
-        .hotspot-tab1-abdomen { top: 58%; left: 42%; width: 16%; height: 15%; }
-        .hotspot-tab1-body { top: 75%; left: 35%; width: 30%; height: 20%; }
-
-        /* 熱區座標 - Tab 2 醫院圖 */
-        .hotspot-tab2-opd { top: 40%; left: 7%; width: 22%; height: 35%; border-radius: 10px; }
+        /* 熱區座標 - Tab 1 人形圖 */
         .hotspot-tab2-er { top: 70%; left: 36%; width: 20%; height: 20%; border-radius: 10px; }
         .hotspot-tab2-or { top: 15%; left: 48%; width: 22%; height: 25%; border-radius: 10px; }
         .hotspot-tab2-pharmacy { top: 70%; left: 27%; width: 8%; height: 8%; border-radius: 10px; }
