@@ -22,6 +22,7 @@
         :root {
             --app-max-width: 1100px;
             --base-font-size: 16px;
+            /* 全面放大字體設定 */
             --menu-font-size: 16px;
             --title-font-size: 19px;
             --primary-color: #3498db;
@@ -174,6 +175,23 @@
             z-index: 2;
         }
 
+        /* 醫院圖提示標籤 */
+        .disclaimer-badge {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.65);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 10;
+            pointer-events: none;
+            white-space: nowrap;
+            backdrop-filter: blur(2px);
+        }
+
         .hotspots-overlay {
             position: absolute;
             top: 0;
@@ -205,11 +223,11 @@
             background-color: rgba(52, 152, 219, 0.15);
         }
 
-        /* 熱區座標 - Tab 1 人形圖 (重新調整高度避免遮擋臉部) */
-        .hotspot-tab1-head { top: 15%; left: 40%; width: 20%; height: 20%; }
-        .hotspot-tab1-body { top: 75%; left: 35%; width: 30%; height: 20%; } /* 全身改至下半部涵蓋雙腿 */
-        .hotspot-tab1-chest { top: 43%; left: 42%; width: 16%; height: 14%; } /* 胸部下移至肩膀以下 */
-        .hotspot-tab1-abdomen { top: 58%; left: 42%; width: 16%; height: 14%; }
+        /* 熱區座標 - Tab 1 人形圖 (順序與位置大幅翻新，胸部落於肩膀下) */
+        .hotspot-tab1-head { top: 15%; left: 42%; width: 16%; height: 20%; }
+        .hotspot-tab1-chest { top: 43%; left: 42%; width: 16%; height: 15%; }
+        .hotspot-tab1-abdomen { top: 58%; left: 42%; width: 16%; height: 15%; }
+        .hotspot-tab1-body { top: 75%; left: 35%; width: 30%; height: 20%; }
 
         /* 熱區座標 - Tab 2 醫院圖 */
         .hotspot-tab2-opd { top: 40%; left: 7%; width: 22%; height: 35%; border-radius: 10px; }
@@ -271,10 +289,9 @@
             pointer-events: none;
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             backdrop-filter: blur(4px);
-            /* 注意：這裡不再設置 overflow: hidden，讓偽元素能自由顯示 */
         }
 
-        /* 內部捲動區塊：負責限制高度並產生捲動軸 */
+        /* 內部捲動區塊：負責限制高度並產生捲動軸，完美解決紅點被裁切問題 */
         .protocol-items-wrapper {
             display: flex;
             flex-direction: column;
@@ -440,16 +457,16 @@
 
         /* --- 電腦版選單位置 --- */
         /* Tab 1 人形圖選單定位與防呆紅點設定 */
-        .pos-tab1-head { top: 15%; left: calc(50% + 150px); }
+        .pos-tab1-head { top: 15%; left: calc(50% + 140px); }
         .pos-tab1-head::before { top: 50%; left: -20px; transform: translateY(-50%); }
 
-        .pos-tab1-body { top: 40%; right: calc(50% + 150px); left: auto; }
+        .pos-tab1-body { top: 40%; right: calc(50% + 140px); left: auto; }
         .pos-tab1-body::before { top: 50%; right: -20px; left: auto; transform: translateY(-50%); }
 
-        .pos-tab1-chest { top: 45%; left: calc(50% + 150px); }
+        .pos-tab1-chest { top: 45%; left: calc(50% + 140px); }
         .pos-tab1-chest::before { top: 50%; left: -20px; right: auto; transform: translateY(-50%); }
         
-        .pos-tab1-abdomen { top: 60%; right: calc(50% + 150px); left: auto; }
+        .pos-tab1-abdomen { top: 60%; right: calc(50% + 140px); left: auto; }
         .pos-tab1-abdomen::before { top: 50%; right: -20px; left: auto; transform: translateY(-50%); }
         
         /* Tab 2 */
@@ -729,7 +746,7 @@
                 { id: 'img-comfort', src: './Comfort_needs.png', alt: '舒適需要示意圖' },
                 { id: 'img-wound', src: './wound_care.png', alt: '傷口照護示意圖' }
             ],
-            // 【核心修改】已將陣列順序更改為：頭部 -> 全身 -> 胸部 -> 腹部
+            // 已將陣列順序更改為：頭部 -> 全身 -> 胸部 -> 腹部
             regions: [
                 { id: 'head', image: 'img-nervous', title: '🧠 頭部 (神經系統)', badge: null, items: [{ no: '015', name: '神經感覺系統', url: 'https://drive.google.com/drive/folders/12VOsJeTQ-9hwwenurnduTRP0vrgo_xx7?usp=drive_link' }] },
                 { id: 'body', image: 'img-vital', title: '🩸 全身性 (體徵與皮膚)', badge: null, items: [{ no: '001', name: '生命徵象.疼痛.情緒困擾', url: 'https://drive.google.com/drive/folders/1omd_6gZsQcPwunujpwxd84qgLnrx8e92?usp=drive_link', hoverImage: 'img-vital' }, { no: '002', name: '體液供給', url: 'https://drive.google.com/drive/folders/1vSrsuosLLVV4ocY4h2b1eDl8C6BwYxB7?usp=drive_link', hoverImage: 'img-fluid' }, { no: '011', name: '舒適需要', url: 'https://drive.google.com/drive/folders/1ODrOuVaCIt0mE9BH7CGAmJtQ0pQFqk9T?usp=drive_link', hoverImage: 'img-comfort' }, { no: '020', name: '傷口照護', url: 'https://drive.google.com/drive/folders/1FQqTWZunZp0pbhMKfx-yrLtiZ0W5PZnR?usp=drive_link', hoverImage: 'img-wound' }] },
@@ -928,23 +945,7 @@
             ]
         };
 
-        /* ============================================================
-           快取破壞 (Cache Busting)
-           ------------------------------------------------------------
-           護理人員或其他使用者的手機/電腦瀏覽器，通常會把圖片檔案快取
-           (暫存)起來，即使我們換了新圖片、檔名完全相同，使用者端也可能
-           繼續看到舊圖，除非他們自己手動清除快取或強制重新整理。
-
-           解決方式：在每張圖片網址後面加上 ?v=版本號，對瀏覽器來說
-           「網址不同 = 不同的檔案」，就會自動重新下載最新的圖片，
-           完全不需要教使用者怎麼操作。
-
-           【日後更新圖片時，你只需要做這一件事】
-           把下面 ASSET_VERSION 的值改掉即可（建議直接改成當天日期，
-           例如 '20260101'、'20260215'...，方便自己記錄哪天更新過）。
-           改完存檔、重新上傳網頁後，所有人下次打開網頁就會自動抓到新圖，
-           不需要再動任何其他地方的程式碼。
-           ============================================================ */
+        /* 快取破壞版本號更新 */
         const ASSET_VERSION = '20260923';
 
         function withVersion(src) {
@@ -990,7 +991,6 @@
             `).join('');
             hotspotsContainer.insertAdjacentHTML('beforebegin', imagesHtml);
 
-
             hotspotsContainer.innerHTML = data.regions.map(region => `
                 <div id="hotspot-${data.id}-${region.id}" class="hotspot hotspot-${data.id}-${region.id}"
                      onmouseenter="hoverRegion('${data.id}', '${region.id}', '${region.image || ''}')"
@@ -1012,7 +1012,7 @@
                             : '';
                         return `<a class="protocol-item ext-link" ${hoverAttrs} href="${item.url}" target="_blank">${item.no} ${item.name}</a>`;
                     } else {
-                        // 針對沒有網址的內部資訊，綁定手風琴特效點擊事件(支援手機端展開)
+                        // 針對沒有網址的內部資訊，綁定手風琴特效點擊事件
                         return `
                         <div class="protocol-item info-item" onclick="this.classList.toggle('expand')">
                             <div class="info-name">${item.name}</div>
@@ -1022,7 +1022,6 @@
                     }
                 }).join('');
                 
-                // 將項目列表包裹在一層新的 div.protocol-items-wrapper 之中，專門用來處理內部捲動
                 return `
                 <div id="menu-${data.id}-${region.id}" class="protocol-btn ${badgeBtnClass} pos-${data.id}-${region.id}"
                      onmouseenter="enterMenu('${data.id}')" onmouseleave="leaveMenu('${data.id}')">
@@ -1185,16 +1184,49 @@
             });
         }
 
+        function calculateScore(item, keywords) {
+            let score = 0;
+            const name = (item.name || '').toLowerCase();
+            const no = (item.no || '').toLowerCase();
+            const region = (item.sourceRegion || '').toLowerCase();
+            const tab = (item.sourceTab || '').toLowerCase();
+            const noteAndTime = `${item.note || ''} ${item.time || ''}`.toLowerCase();
+            
+            keywords.forEach(kw => {
+                if (no === kw) score += 100; 
+                else if (no.includes(kw)) score += 80;
+                
+                if (name === kw) score += 90; 
+                else if (name.startsWith(kw)) score += 70; 
+                else if (name.includes(kw)) score += 50; 
+                
+                if (region.includes(kw)) score += 30; 
+                if (tab.includes(kw)) score += 20; 
+
+                if (noteAndTime.includes(kw)) score += 10; 
+            });
+            return score;
+        }
+
         function renderAllProtocols(filterText = '') {
             const container = document.getElementById('all-protocols-list');
             container.innerHTML = '';
             
             const lowerFilter = filterText.toLowerCase().trim();
+            let filtered = allProtocolsData;
             
-            const filtered = allProtocolsData.filter(item => {
-                const textToSearch = `${item.no || ''} ${item.name} ${item.sourceTab} ${item.sourceRegion} ${item.note || ''}`.toLowerCase();
-                return textToSearch.includes(lowerFilter);
-            });
+            if (lowerFilter) {
+                const keywords = lowerFilter.split(/\s+/);
+                
+                filtered = allProtocolsData.filter(item => {
+                    const textToSearch = `${item.no || ''} ${item.name} ${item.sourceTab} ${item.sourceRegion} ${item.note || ''} ${item.time || ''}`.toLowerCase();
+                    return keywords.every(kw => textToSearch.includes(kw));
+                });
+
+                filtered.sort((a, b) => {
+                    return calculateScore(b, keywords) - calculateScore(a, keywords);
+                });
+            }
 
             if (filtered.length === 0) {
                 container.innerHTML = '<div style="text-align:center; padding: 40px; color: #95a5a6; font-size: 16px;">找不到符合的規範項目，請嘗試其他關鍵字。</div>';
